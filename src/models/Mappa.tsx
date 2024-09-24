@@ -4,8 +4,7 @@ import { APIProvider, Map, MapCameraChangedEvent } from '@vis.gl/react-google-ma
 
 const Mappa: React.FC = () => {
 
-    const root = createRoot(document.getElementById('mappa') as HTMLElement);
-    root.render(<Mappa />);
+
 
     return (
         <>
@@ -25,6 +24,8 @@ const Mappa: React.FC = () => {
 
 };
 
+// const root = createRoot(document.getElementById('mappa') as HTMLElement);
+// root.render(<Mappa />);
 
 
 export default Mappa;
