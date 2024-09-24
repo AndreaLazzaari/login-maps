@@ -1,121 +1,146 @@
-import React from 'react';
-import { createRoot } from "react-dom/client";
-import {
-    APIProvider,
-    Map,
-    AdvancedMarker,
-    MapCameraChangedEvent,
-    Pin,
-    useMap
-} from '@vis.gl/react-google-maps';
-import './Mappa.css'
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { APIProvider, Map, MapCameraChangedEvent, useMap, MapMouseEvent } from '@vis.gl/react-google-maps';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
-import type { Marker } from '@googlemaps/markerclusterer';
-import { useState, useEffect } from 'react';
-import { useRef } from 'react';
-import { useCallback } from 'react';
-type Poi = { key: string, location: google.maps.LatLngLiteral }
-const locations: Poi[] = [
-    { key: 'operaHouse', location: { lat: -33.8567844, lng: 151.213108 } },
-    { key: 'tarongaZoo', location: { lat: -33.8472767, lng: 151.2188164 } },
-    { key: 'manlyBeach', location: { lat: -33.8209738, lng: 151.2563253 } },
-    { key: 'hyderPark', location: { lat: -33.8690081, lng: 151.2052393 } },
-    { key: 'theRocks', location: { lat: -33.8587568, lng: 151.2058246 } },
-    { key: 'circularQuay', location: { lat: -33.858761, lng: 151.2055688 } },
-    { key: 'harbourBridge', location: { lat: -33.852228, lng: 151.2038374 } },
-    { key: 'kingsCross', location: { lat: -33.8737375, lng: 151.222569 } },
-    { key: 'botanicGardens', location: { lat: -33.864167, lng: 151.216387 } },
-    { key: 'museumOfSydney', location: { lat: -33.8636005, lng: 151.2092542 } },
-    { key: 'maritimeMuseum', location: { lat: -33.869395, lng: 151.198648 } },
-    { key: 'kingStreetWharf', location: { lat: -33.8665445, lng: 151.1989808 } },
-    { key: 'aquarium', location: { lat: -33.869627, lng: 151.202146 } },
-    { key: 'darlingHarbour', location: { lat: -33.87488, lng: 151.1987113 } },
-    { key: 'barangaroo', location: { lat: - 33.8605523, lng: 151.1972205 } },
-];
+import './Mappa.css';
+
+type Poi = { key: number; location: google.maps.LatLngLiteral };
+
+const initialLocations: Poi[] = [];
+
+const Mappa = () => {
+    const [locations, setLocation] = useState<Poi[]>(initialLocations);
+    const [defaultCenter, setDefaultCenter] = useState<{ lat: number; lng: number }>({ lat: 38.115556, lng: 13.361389 });
+    const mapRef = useRef<google.maps.Map | null>(null); // Riferimento per la mappa
+
+    useEffect(() => {
+        const getLocation = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        setDefaultCenter({ lat: latitude, lng: longitude });
+
+                        // Ricarica la pagina se la mappa è caricata
+                        if (mapRef.current) {
+                            window.location.reload(); // Ricarica la pagina
+                        }
+                    },
+                    (error) => {
+                        console.error('Error obtaining location:', error);
+                    }
+                );
+            } else {
+                console.log('Geolocation is not supported by this browser.');
+            }
+        };
+
+        getLocation();
+    }, []);
+
+    const handleMapClick = useCallback((ev: MapMouseEvent) => {
+        console.log('Map clicked:', ev); // Log the event to see if it’s firing
+
+        const latLng = ev.detail.latLng;
+
+        // Access lat and lng directly from the latLng object
+        if (latLng) {
+            const newKey = locations.length + 1; // Increment the key based on the current locations array length
+            const newLocation: Poi = {
+                key: newKey,
+                location: { lat: latLng.lat, lng: latLng.lng } // Use lat and lng properties directly
+            };
+
+            // Update the state with the new location
+            setLocation(prevLocations => {
+                const updatedLocations = [...prevLocations, newLocation];
+                console.log('Updated locations:', updatedLocations); // Log the updated locations array
+                return updatedLocations;
+            });
+        } else {
+            console.log('latLng is undefined'); // Log if latLng is not defined
+        }
+    }, [locations]);
+
+    return (
+        <APIProvider apiKey={'AIzaSyC7vPnO4aSTFK7V62S-4C4TWnx-EID4Vps'} onLoad={() => console.log('Maps API has loaded.')}>
+            <div className='map-container'>
+                <div className='map-content'>
 
 
-const Mappa = () => (
-    <APIProvider apiKey={'AIzaSyC7vPnO4aSTFK7V62S-4C4TWnx-EID4Vps'} onLoad={() => console.log('Maps API has loaded.')}>
-        <div className='mappa'>
-            <Map
-                defaultZoom={13}
-                defaultCenter={{ lat: -33.860664, lng: 151.208138 }}
-                mapId='DEMO_MAP_ID'
-                onCameraChanged={(ev: MapCameraChangedEvent) =>
-                    console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
-                }>
-                <PoiMarkers pois={locations} />
-            </Map>
+                    <h1>Mappa dei Luoghi</h1> {/* Titolo della mappa */}
+                    <div className='mappa'>
+                        <Map
+                            defaultZoom={13}
+                            defaultCenter={defaultCenter}
+                            mapId='DEMO_MAP_ID'
+                            onCameraChanged={(ev: MapCameraChangedEvent) =>
+                                console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
+                            }
+                            onClick={handleMapClick}
+                        >
+                            <PoiMarkers pois={locations} />
+                        </Map>
+                    </div>
+                </div>
+                {/* List of markers moved outside the map-container */}
+                <MarkerList locations={locations} />
+            </div>
+        </APIProvider>
+    );
+};
+
+// Component to display the list of markers
+const MarkerList = ({ locations }: { locations: Poi[] }) => {
+    return (
+        <div className="marker-list">
+            <h2>Posizioni salvate</h2>
+            <ul>
+                {locations.slice().map((poi) => (
+                    <li key={poi.key}>
+                        Posizione {poi.key}: Lat {poi.location.lat}, Lng {poi.location.lng}
+                    </li>
+                ))}
+            </ul>
         </div>
-    </APIProvider>
-);
+    );
+};
+
 const PoiMarkers = (props: { pois: Poi[] }) => {
     const map = useMap();
-    const [markers, setMarkers] = useState<{ [key: string]: Marker }>({});
     const clusterer = useRef<MarkerClusterer | null>(null);
 
     const handleClick = useCallback((ev: google.maps.MapMouseEvent) => {
-        if (!map) return;
-        if (!ev.latLng) return;
+        if (!map || !ev.latLng) return;
         console.log('marker clicked:', ev.latLng.toString());
         map.panTo(ev.latLng);
     }, [map]);
 
-    const setMarkerRef = (marker: Marker | null, key: string) => {
-        if (marker && markers[key]) return;
-        if (!marker && !markers[key]) return;
-
-        setMarkers(prev => {
-            if (marker) {
-                return { ...prev, [key]: marker };
-            } else {
-                const newMarkers = { ...prev };
-                delete newMarkers[key];
-                return newMarkers;
-            }
-        });
-    };
-
-    // Initialize MarkerClusterer, if the map has changed
     useEffect(() => {
-        if (!map) return;
-        if (!clusterer.current) {
+        if (map && !clusterer.current) {
             clusterer.current = new MarkerClusterer({ map });
         }
     }, [map]);
 
-    // Update markers, if the markers array has changed
     useEffect(() => {
-        clusterer.current?.clearMarkers();
-        clusterer.current?.addMarkers(Object.values(markers));
-    }, [markers]);
+        if (!clusterer.current) return;
 
-    return (
-        <>
-            {props.pois.map((poi: Poi) => (
-                <AdvancedMarker
-                    key={poi.key}
-                    position={poi.location}
-                    ref={marker => setMarkerRef(marker, poi.key)}
-                    clickable={true}
-                    onClick={handleClick}
-                >
-                    <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
-                </AdvancedMarker>
-            ))}
-        </>
-    );
+        // Clear previous markers and add new ones
+        clusterer.current.clearMarkers();
+        const newMarkers = props.pois.map((poi) => {
+            const marker = new google.maps.Marker({
+                position: poi.location,
+                map: map,
+                title: `Marker ${poi.key}`,
+            });
+
+            marker.addListener('click', handleClick);
+            return marker;
+        });
+
+        clusterer.current.addMarkers(newMarkers);
+    }, [props.pois, handleClick]);
+
+    return null; // No JSX is returned here
 };
 
-
-
-
-
 export default Mappa;
-
-
-
-
-
-
-

@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import './login.css';
 
 interface Credenziali {
     username: string;
@@ -65,7 +66,7 @@ const Login: React.FC = () => {
     return (
         <div className="login-container">
             <img
-                src="https://www.digitality-consulting.com/wp-content/uploads/2023/02/cropped-loghi.png"
+                src="https://www.digitality-consulting.com/wp-content/uploads/2023/01/Logo-Digitality-Consulting-1000-%C3%97-1000-px.png"
                 alt="Logo"
                 className="logo"
             />

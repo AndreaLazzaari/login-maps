@@ -1,4 +1,113 @@
+.map-container {
+    display: flex;
+    /* Usa flexbox per allineare la mappa e la lista orizzontalmente */
+    padding: 20px;
+    justify-content: space-between;
+    min-height: 800px;
+    /* Altezza minima per il contenitore */
+    margin: 0;
+    /* Rimuove il margine a sinistra */
+}
+
+.map-content {
+    display: flex;
+    /* Usa flexbox per disporre il titolo e la mappa verticalmente */
+    flex-direction: column;
+    /* Colonna per il titolo e la mappa */
+    margin-left: -300px;
+    margin-right: 300px;
+    /* Margine a destra per distanziare la lista */
+}
+
 .mappa {
     width: 600px;
+    /* Larghezza fissa per la mappa */
     height: 600px;
+    /* Altezza fissa per la mappa */
+    margin-top: 10px;
+    /* Margine superiore per distanziare il titolo dalla mappa */
+    background-color: #f4f4f4;
+    /* Colore di sfondo leggero */
+    border-radius: 8px;
+    /* Angoli arrotondati */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Ombra per dare profondità */
+}
+
+.marker-list {
+    flex-grow: 1;
+    /* Permette alla lista di occupare lo spazio rimanente */
+    background: #f4f4f4;
+    /* Colore di sfondo bianco per la lista */
+    border-radius: 8px;
+    /* Angoli arrotondati */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Ombra per la lista */
+    padding: 20px;
+    /* Padding interno per la lista */
+    text-align: left;
+    /* Allinea il testo a sinistra */
+    max-width: 300px;
+    /* Larghezza massima per la lista */
+    margin-left: 150px;
+    margin-right: -200px;
+    /* Margine a sinistra per distanziare la lista dalla mappa */
+}
+
+h1 {
+    margin: 0;
+    /* Rimuove margini */
+    padding: 20px 0;
+    /* Padding verticale per il titolo */
+
+    /* Colore del testo */
+    text-align: center;
+    /* Centra il titolo */
+    font-size: 24px;
+    /* Dimensione del font */
+}
+
+
+
+
+
+.marker-list h2 {
+    margin-top: 0;
+    /* Rimuove il margine superiore */
+    color: #333;
+    /* Colore del titolo della lista */
+    font-size: 20px;
+    /* Dimensione del font */
+    text-align: center;
+    /* Centra il titolo della lista */
+}
+
+.marker-list ul {
+    list-style: none;
+    /* Rimuove i punti elenco */
+    padding: 0;
+    /* Rimuove il padding */
+    margin: 0;
+    /* Rimuove il margine */
+}
+
+.marker-list li {
+    padding: 10px;
+    /* Padding per ogni elemento della lista */
+    border-bottom: 1px solid #eee;
+    /* Linea separatrice */
+    color: #555;
+    /* Colore del testo */
+    margin: 0;
+    /* Rimuove il margine per ogni elemento */
+}
+
+.marker-list li:last-child {
+    border-bottom: none;
+    /* Rimuove la linea per l'ultimo elemento */
+}
+
+.marker-list li:hover {
+    background-color: #f1f1f1;
+    /* Cambia colore al passaggio del mouse */
 }

@@ -1,0 +1,147 @@
+/* Stili per il contenitore principale del login */
+.login-container {
+    display: flex;
+    /* Usa flexbox per allineare il logo e il modulo di login */
+    align-items: center;
+    justify-content: space-between;
+    /* Allinea verticalmente al centro */
+    padding: 20px;
+    /* Padding attorno al contenitore */
+    height: 100vh;
+    /* Altezza minima per il contenitore */
+
+    /* Colore di sfondo della pagina */
+}
+
+.logo {
+    width: 500px;
+    /* Larghezza del logo */
+    height: 500px;
+    /* Altezza del logo */
+    margin-right: 40px;
+    /* Spazio tra il logo e il modulo */
+    margin-top: -100px;
+    /* Sposta il logo verso l'alto */
+}
+
+.login-card {
+    background: #3485BD;
+    /* Colore di sfondo della card di login */
+    border-radius: 8px;
+    /* Arrotonda gli angoli della card */
+    padding: 4rem;
+    /* Padding interno della card */
+    width: 20rem;
+    /* Larghezza massima della card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    /* Ombra della card */
+    display: flex;
+    /* Usa flexbox per disporre gli elementi al suo interno */
+    flex-direction: column;
+    /* Disposizione verticale */
+    align-items: center;
+    /* Centra orizzontalmente il contenuto */
+}
+
+/* Aggiungi margine ai wrapper degli input per creare spazio tra i campi */
+.input-wrapper {
+    margin-bottom: 1.5rem;
+    /* Spazio tra i campi di input */
+    width: 100%;
+    /* Imposta larghezza del wrapper per i campi di input */
+}
+
+/* Modifica il colore dei link in bianco */
+.links {
+    display: flex;
+    /* Usa flexbox per disporre i link */
+    justify-content: space-between;
+    /* Spazio tra i link */
+    width: 100%;
+    /* Larghezza del contenitore dei link */
+    margin-top: 1rem;
+    /* Spazio sopra i link */
+}
+
+.forgot-password,
+.register {
+    color: #ffffff;
+    /* Colore bianco per i link */
+    font-size: 14px;
+    /* Dimensione del font */
+    text-decoration: none;
+    /* Rimuovi la sottolineatura */
+    transition: color 0.2s ease;
+    /* Transizione per il cambio di colore */
+}
+
+.forgot-password:hover,
+.register:hover {
+    color: #e0e0e0;
+    /* Colore del link quando si passa sopra con il mouse */
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px;
+    /* Aumenta il padding per un aspetto più accogliente */
+    border: 1px solid #ccc;
+    /* Bordo chiaro per un look pulito */
+    border-radius: 5px;
+    /* Arrotonda gli angoli */
+    background: #f9f9f9;
+    /* Colore di sfondo chiaro per gli input */
+    color: #333;
+    /* Colore del testo */
+    font-size: 16px;
+    /* Dimensione del font */
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+    /* Transizione per l'interazione */
+}
+
+/* Effetto al passaggio del mouse sugli input */
+.input-field:focus {
+    border-color: #3485BD;
+    /* Colore del bordo quando è attivo */
+    box-shadow: 0 0 5px rgba(52, 133, 189, 0.5);
+    /* Ombra per evidenziare il campo */
+    outline: none;
+    /* Rimuovi il bordo di default */
+}
+
+/* Modifica il pulsante di login per renderlo più grande */
+.login-button {
+    padding: 12px;
+    /* Aumenta il padding */
+    border: none;
+    border-radius: 4px;
+    background: #ffffff;
+    /* Colore di sfondo del pulsante */
+    color: #000000;
+    /* Colore del testo */
+    font-size: 18px;
+    /* Aumenta la dimensione del font */
+    cursor: pointer;
+    transition: background 0.2s ease;
+    width: 100%;
+    /* Larghezza al 100% */
+    max-width: 100px;
+    margin-left: 20px;
+    /* Larghezza massima */
+}
+
+.login-button:hover {
+    background: #4752c4;
+    /* Colore del pulsante quando si passa sopra con il mouse */
+}
+
+.error-message {
+    color: #f04747;
+    /* Colore rosso per i messaggi di errore */
+    font-size: 14px;
+    /* Dimensione del font */
+    text-align: center;
+    /* Allinea il testo al centro */
+    margin-top: 1rem;
+    /* Margine sopra il messaggio di errore */
+}
