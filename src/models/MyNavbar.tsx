@@ -42,7 +42,7 @@ const MyNavbar: React.FC = () => {
                         <Nav.Link href="#home" className='text-white' onClick={handleHome}>Home</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
-                <Button variant="outline-primary" onClick={handleClick}>{isLoggedIn ? 'Logout' : 'Login'}</Button>{' '}
+                <Button variant="outline-primary text-white" onClick={handleClick}>{isLoggedIn ? 'Logout' : 'Login'}</Button>{' '}
             </Container>
         </Navbar>
     );

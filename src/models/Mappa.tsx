@@ -12,7 +12,8 @@ const Mappa = () => {
     const [locations, setLocation] = useState<Poi[]>([]);
     const [defaultLocation, setDefaultLocation] = useState<{ lat: number; lng: number }>({ lat: 38.115556, lng: 13.361389 });
     const [locationLoaded, setLocationLoaded] = useState(false);  // Stato per tracciare se la localizzazione è stata caricata
-
+    const [selectedMarker, setSelectedMarker] = useState<Poi | null>(null);
+    const mapRef = useRef<google.maps.Map | null>(null); // Riferimento alla mappa
     const storage = getStorage();
 
     // Funzione per ottenere la posizione dell'utente
@@ -128,6 +129,19 @@ const Mappa = () => {
         }
     }, [locations]);
 
+    const handleMarkerClick = (marker: Poi) => {
+        setSelectedMarker(marker);
+        if (marker && marker.location && mapRef.current) {
+            const googleMap = mapRef.current;
+            if (googleMap) {
+                googleMap.panTo(marker.location);
+            } else {
+                console.error("Mappa non disponibile.");
+            }
+        }
+    };
+
+
     return (
         <>
 
@@ -148,6 +162,10 @@ const Mappa = () => {
                                     console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                                 }
                                 onClick={handleMapClick}
+                                onLoad={(map) => {
+                                    mapRef.current = map;
+                                    console.log("Mappa caricata:", map)
+                                }}
                             >
                                 {/* imposta il riferimento alla mappa */}
                                 <PoiMarkers pois={locations} />
@@ -157,7 +175,7 @@ const Mappa = () => {
                         )}
                     </div>
                     <div>
-                        <MarkerList locations={locations} onFileChange={handleFileChange} />
+                        <MarkerList locations={locations} onFileChange={handleFileChange} onMarkerClick={handleMarkerClick} />
                     </div>
                 </div>
             </APIProvider>
@@ -165,13 +183,13 @@ const Mappa = () => {
     );
 };
 
-const MarkerList = ({ locations, onFileChange }: { locations: Poi[]; onFileChange: (event: React.ChangeEvent<HTMLInputElement>, marker: Poi) => void }) => {
+const MarkerList = ({ locations, onFileChange, onMarkerClick }: { locations: Poi[]; onFileChange: (event: React.ChangeEvent<HTMLInputElement>, marker: Poi) => void; onMarkerClick: (marker: Poi) => void }) => {
     return (
         <div className="marker-list">
             <h2>Posizioni salvate</h2>
             <ul>
                 {locations.map((poi) => (
-                    <li key={poi.key}>
+                    <li key={poi.key} onClick={() => onMarkerClick(poi)} style={{ cursor: 'pointer' }}>
                         {`Lat: ${poi.location.lat}, Lng: ${poi.location.lng}`}
                         <input type="file" accept="image/*" onChange={(e) => onFileChange(e, poi)} />
                         {poi.image && <img src={poi.image} alt={`Marker ${poi.key}`} width={50} height={50} />}
