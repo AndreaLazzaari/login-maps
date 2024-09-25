@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { db } from '../firebaseConfig';
 import { collection, getDocs, setDoc, doc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import Cookies from 'js-cookie';
 
 type Poi = { key: string; location: google.maps.LatLngLiteral; image: string | null };
 
@@ -15,6 +16,7 @@ const Mappa = () => {
     const navigate = useNavigate();
     const [defaultCenter, setDefaultCenter] = useState<{ lat: number; lng: number }>({ lat: 38.115556, lng: 13.361389 });
     const [locationLoaded, setLocationLoaded] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const storage = getStorage();
 
@@ -41,6 +43,21 @@ const Mappa = () => {
             setLocationLoaded(true);
         }
     }, []);
+
+    useEffect(() => {
+        const token = Cookies.get('token');
+        if (token) {
+            setIsLoggedIn(true);
+            // Se il token non esiste, reindirizza alla pagina di login
+            console.log('sei Loggato')
+        }
+        if (!token) {
+            setIsLoggedIn(false);
+            // Se il token non esiste, reindirizza alla pagina di login
+            navigate('/login');
+            console.log('non sei loggato')
+        }
+    }, [navigate]);
 
     const fetchLocationsFromFirestore = async () => {
         try {

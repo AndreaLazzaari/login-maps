@@ -43,7 +43,7 @@ const Login: React.FC = () => {
                     const data = await response.json();
                     console.log('Dati ricevuti:', data);
 
-                    navigate('/mappa');
+                    navigate('/');
 
                     const token = data.data;
                     Cookies.set('token', token, { expires: 7 });
