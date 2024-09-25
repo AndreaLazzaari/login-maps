@@ -162,10 +162,10 @@ const Mappa = () => {
                                     console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                                 }
                                 onClick={handleMapClick}
-                                onLoad={(map) => {
-                                    mapRef.current = map;
-                                    console.log("Mappa caricata:", map)
-                                }}
+                            // onLoad={(map) => {
+                            //     mapRef.current = map;
+                            //     console.log("Mappa caricata:", map)
+                            // }}
                             >
                                 {/* imposta il riferimento alla mappa */}
                                 <PoiMarkers pois={locations} />
