@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import 'firebase/storage';
 
 // La configurazione del tuo progetto Firebase (la ottieni dalla Firebase Console)
 const firebaseConfig = {

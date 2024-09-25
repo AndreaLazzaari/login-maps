@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import './Login.css'
+import { useAuth } from './AuthContext';
 
 interface Credenziali {
     username: string;
@@ -11,6 +12,7 @@ interface Credenziali {
 const Login: React.FC = () => {
     const [credenziali, setCredenziali] = useState<Credenziali>({ username: '', password: '' });
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,12 +44,15 @@ const Login: React.FC = () => {
                 if (response.ok) {
                     const data = await response.json();
                     console.log('Dati ricevuti:', data);
-                    // navigazione in mappa
-                    navigate('/mappa');
-
                     const token = data.data;
                     Cookies.set('token', token, { expires: 7 });
                     console.log('Login riuscito! Token salvato:', token);
+
+                    login(); // Chiama la funzione di login
+
+                    // navigazione in mappa
+                    navigate('/mappa');
+
 
                 } else {
                     const errorData = await response.json();

@@ -5,14 +5,31 @@ import Navbar from 'react-bootstrap/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 const MyNavbar: React.FC = () => {
+    const auth = useAuth();
+    const isLoggedIn = auth.isLoggedIn;
+    const logout = auth.logout;
     const navigate = useNavigate();
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        navigate('/login')
+        if (isLoggedIn) {
+            logout();
+            console.log('sei disconnesso');
+            navigate('/login')
+        } else {
+            navigate('/login')
+        }
     }
+
+    const handleHome = (e: React.MouseEvent<HTMLLinkElement>) => {
+        e.preventDefault();
+        navigate('/')
+    }
+
+
 
 
     return (
@@ -22,11 +39,10 @@ const MyNavbar: React.FC = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="#home" className='text-white'>Home</Nav.Link>
-                        <Nav.Link href="#link" className='text-white'>Link</Nav.Link>
+                        <Nav.Link href="#home" className='text-white' onClick={handleHome}>Home</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
-                <Button variant="outline-primary" onClick={handleClick}>Login</Button>{' '}
+                <Button variant="outline-primary" onClick={handleClick}>{isLoggedIn ? 'Logout' : 'Login'}</Button>{' '}
             </Container>
         </Navbar>
     );
