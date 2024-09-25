@@ -41,7 +41,7 @@ const Mappa = () => {
 
     const fetchLocationsFromFirestore = async () => {
         try {
-            const querySnapshot = await getDocs(collection(db, 'alessandro/markers'));
+            const querySnapshot = await getDocs(collection(db, 'alessandro/Markers/Poi'));
             const poiData: Poi[] = querySnapshot.docs.map(doc => ({
                 key: doc.id,
                 location: {
@@ -59,7 +59,7 @@ const Mappa = () => {
     // Funzione per salvare il marker nel Firestore
     const saveMarkerToFirestore = async (marker: Poi) => {
         try {
-            const markerRef = doc(collection(db, 'alessandro/markers/poi'), marker.key);
+            const markerRef = doc(collection(db, 'alessandro/Markers/Poi'), marker.key);
             await setDoc(markerRef, {
                 lat: marker.location.lat,
                 lng: marker.location.lng
@@ -73,7 +73,7 @@ const Mappa = () => {
     useEffect(() => {
         getUserLocation();
         fetchLocationsFromFirestore();
-    }, [getUserLocation]);
+    }, []);
 
     const handleMapClick = useCallback(async (ev: MapMouseEvent) => {
         console.log('Mappa cliccata:', ev);
