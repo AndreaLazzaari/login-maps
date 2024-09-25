@@ -42,7 +42,7 @@ const Login: React.FC = () => {
                 if (response.ok) {
                     const data = await response.json();
                     console.log('Dati ricevuti:', data);
-
+                    // navigazione in mappa
                     navigate('/mappa');
 
                     const token = data.data;

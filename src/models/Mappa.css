@@ -23,7 +23,7 @@ body {
 
 /* La mappa occupa l'80% dell'altezza e una larghezza ridotta */
 .mappa {
-    width: 80%;
+    width: 70%;
     /* Riduci la larghezza della mappa */
     height: 80vh;
     /* Mappa ridotta al 80% dell'altezza del viewport */
@@ -37,6 +37,7 @@ body {
     /* Aggiungi un bordo opzionale per migliorare l'estetica */
     border-radius: 10px;
     /* Arrotonda leggermente gli angoli della mappa */
+    float: left;
 }
 
 /* Div che rimane sotto la mappa */
@@ -48,6 +49,65 @@ body {
     justify-content: center;
     background-color: #f1f1f1;
     font-family: Arial, sans-serif;
+}
+
+.marker-list {
+    width: 20%;
+    /* adjust the width to your liking */
+    height: 80vh;
+    /* match the height of the map */
+    margin: 0 auto;
+    /* center horizontally */
+    padding: 20px;
+    /* add some padding for readability */
+    background-color: #f1f1f1;
+    /* light gray background */
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    float: left;
+    margin-left: 20px;
+}
+
+.marker-list h2 {
+    margin-top: 0;
+    /* remove margin top for the h2 element */
+}
+
+.marker-list ul {
+    list-style: none;
+    /* remove bullet points */
+    padding: 0;
+    /* remove padding */
+    margin: 0;
+    /* remove margin */
+}
+
+.marker-list li {
+    padding: 10px;
+    /* add some padding for readability */
+    border-bottom: 1px solid #ccc;
+    /* add a border between list items */
+}
+
+.marker-list li:last-child {
+    border-bottom: none;
+    /* remove border from the last list item */
+}
+
+.contenitore {
+    padding: 1.5rem;
+}
+
+/* Adjust the layout for mobile devices */
+@media (max-width: 768px) {
+    .marker-list {
+        width: 40%;
+        /* increase the width on smaller screens */
+        height: 60vh;
+        /* reduce the height on smaller screens */
+    }
 }
 
 /* Mobile adjustments */

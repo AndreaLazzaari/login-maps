@@ -6,7 +6,7 @@ import './Mappa.css';
 type Poi = { key: number; location: google.maps.LatLngLiteral };
 
 const initialLocations: Poi[] = [
-    // { key: 1, location: { lat: -33.8567844, lng: 151.213108 } },
+    { key: 0, location: { lat: 41.79565866566127, lng: 41.79565866566127 } },
     // { key: 2, location: { lat: -33.8472767, lng: 151.2188164 } },
     // { key: 3, location: { lat: -33.8209738, lng: 151.2563253 } },
 ];
@@ -85,25 +85,46 @@ const Mappa = () => {
                 </h1>
             </div>
             <APIProvider apiKey={'AIzaSyC7vPnO4aSTFK7V62S-4C4TWnx-EID4Vps'} onLoad={() => console.log('Maps API has loaded.')}>
-                <div className='mappa'>
-                    {locationLoaded ? (
-                        <Map
-                            defaultZoom={13}
-                            defaultCenter={defaultLocation}
-                            mapId='DEMO_MAP_ID'
-                            onCameraChanged={(ev: MapCameraChangedEvent) =>
-                                console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
-                            }
-                            onClick={handleMapClick}
-                        >
-                            <PoiMarkers pois={locations} />
-                        </Map>
-                    ) : (
-                        <p>Caricamento della posizione</p>
-                    )}
+                <div className='contenitore'>
+                    <div className='mappa'>
+                        {locationLoaded ? (
+                            <Map
+                                defaultZoom={13}
+                                defaultCenter={defaultLocation}
+                                mapId='DEMO_MAP_ID'
+                                onCameraChanged={(ev: MapCameraChangedEvent) =>
+                                    console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
+                                }
+                                onClick={handleMapClick}
+                            >
+                                {/* imposta il riferimento alla mappa */}
+                                <PoiMarkers pois={locations} />
+                            </Map>
+                        ) : (
+                            <p>Caricamento della posizione...</p>
+                        )}
+                    </div>
+                    <div>
+                        <MarkerList locations={locations} />
+                    </div>
                 </div>
             </APIProvider>
         </>
+    );
+};
+
+const MarkerList = ({ locations }: { locations: Poi[] }) => {
+    return (
+        <div className="marker-list">
+            <h2>Posizioni salvate</h2>
+            <ul>
+                {locations.slice().map((poi) => (
+                    <li key={poi.key}>
+                        Posizione {poi.key}: Lat {poi.location.lat}, Lng {poi.location.lng}
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 };
 
@@ -113,7 +134,7 @@ const PoiMarkers = (props: { pois: Poi[] }) => {
 
     const handleClick = useCallback((ev: google.maps.MapMouseEvent) => {
         if (!map || !ev.latLng) return;
-        console.log('marker clicked:', ev.latLng.toString());
+        console.log('marker cliccato', ev.latLng.toString());
         map.panTo(ev.latLng);
     }, [map]);
 

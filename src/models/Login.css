@@ -21,7 +21,8 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 300px;
+    width: 400px;
+    height: 500px;
 }
 
 .title {
@@ -35,7 +36,7 @@
 .login-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
 }
 
 .input-wrapper {
