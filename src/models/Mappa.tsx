@@ -4,32 +4,28 @@ import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import './Mappa.css';
 import './navbar.css';
 import { useNavigate } from 'react-router-dom';
+import { db } from '../firebaseConfig'; // Assicurati che la configurazione di Firebase sia corretta
+import { collection, getDocs, setDoc, doc } from "firebase/firestore"; // Importa setDoc e doc
 
-type Poi = { key: number; location: google.maps.LatLngLiteral };
-
-const initialLocations: Poi[] = [
-    { key: 1, location: { lat: -33.8567844, lng: 151.213108 } }
-];
+type Poi = { key: string; location: google.maps.LatLngLiteral };
 
 const Mappa = () => {
-    const [locations, setLocation] = useState<Poi[]>(initialLocations);
+    const [locations, setLocations] = useState<Poi[]>([]);
     const navigate = useNavigate();
     const [defaultCenter, setDefaultCenter] = useState<{ lat: number; lng: number }>({ lat: 38.115556, lng: 13.361389 });
-    const [locationLoaded, setLocationLoaded] = useState(false);  // Stato per tracciare se la localizzazione è stata caricata
+    const [locationLoaded, setLocationLoaded] = useState(false);
 
-
-    // Funzione per ottenere la posizione dell'utente
     const getUserLocation = useCallback(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
                     setDefaultCenter({ lat: latitude, lng: longitude });
-                    setLocationLoaded(true); // La localizzazione è stata caricata correttamente
+                    setLocationLoaded(true);
                 },
                 (error) => {
                     console.error('Errore nell\'ottenere la posizione:', error);
-                    setLocationLoaded(true); // Anche in caso di errore segniamo che la localizzazione è stata caricata
+                    setLocationLoaded(true);
                 },
                 {
                     enableHighAccuracy: true,
@@ -39,36 +35,68 @@ const Mappa = () => {
             );
         } else {
             console.log('Geolocalizzazione non supportata dal browser.');
-            setLocationLoaded(true); // Geolocalizzazione non disponibile nel browser
+            setLocationLoaded(true);
         }
     }, []);
 
-    // Chiedere la posizione dell'utente una volta montato il componente
+    const fetchLocationsFromFirestore = async () => {
+        try {
+            const querySnapshot = await getDocs(collection(db, 'alessandro/markers'));
+            const poiData: Poi[] = querySnapshot.docs.map(doc => ({
+                key: doc.id,
+                location: {
+                    lat: doc.data().lat,
+                    lng: doc.data().lng
+                }
+            }));
+            setLocations(poiData);
+            console.log('Posizioni ottenute da Firestore:', poiData);
+        } catch (error) {
+            console.error('Errore nel recupero delle posizioni da Firestore:', error);
+        }
+    };
+
+    // Funzione per salvare il marker nel Firestore
+    const saveMarkerToFirestore = async (marker: Poi) => {
+        try {
+            const markerRef = doc(collection(db, 'alessandro/markers/poi'), marker.key);
+            await setDoc(markerRef, {
+                lat: marker.location.lat,
+                lng: marker.location.lng
+            });
+            console.log('Marker salvato nel Firestore:', marker);
+        } catch (error) {
+            console.error('Errore nel salvataggio del marker nel Firestore:', error);
+        }
+    };
+
     useEffect(() => {
         getUserLocation();
+        fetchLocationsFromFirestore();
     }, [getUserLocation]);
 
-    const handleMapClick = useCallback((ev: MapMouseEvent) => {
-        console.log('Mappa cliccata:', ev); // Log dell'evento per vedere se si attiva
+    const handleMapClick = useCallback(async (ev: MapMouseEvent) => {
+        console.log('Mappa cliccata:', ev);
 
         const latLng = ev.detail.latLng;
 
-        // Accedi a lat e lng direttamente dall'oggetto latLng
         if (latLng) {
-            const newKey = locations.length + 1; // Incrementa la chiave in base alla lunghezza attuale dell'array delle posizioni
+            const newKey = `${locations.length + 1}`;
             const newLocation: Poi = {
                 key: newKey,
-                location: { lat: latLng.lat, lng: latLng.lng } // Usa le proprietà lat() e lng() direttamente
+                location: { lat: latLng.lat, lng: latLng.lng }
             };
 
-            // Aggiorna lo stato con la nuova posizione
-            setLocation(prevLocations => {
+            setLocations(prevLocations => {
                 const updatedLocations = [...prevLocations, newLocation];
-                console.log('Posizioni aggiornate:', updatedLocations); // Log dell'array delle posizioni aggiornato
+                console.log('Posizioni aggiornate:', updatedLocations);
                 return updatedLocations;
             });
+
+            // Salva il nuovo marker in Firestore
+            await saveMarkerToFirestore(newLocation);
         } else {
-            console.log('latLng non definito'); // Log se latLng non è definito
+            console.log('latLng non definito');
         }
     }, [locations]);
 
@@ -77,8 +105,6 @@ const Mappa = () => {
             <div>
                 <header>
                     <div>
-
-
                         <nav className="navbar navbar-expand-lg bg-light">
                             <div className="container-fluid">
                                 <a className="navbar-brand" href="#">
@@ -106,14 +132,12 @@ const Mappa = () => {
                                 <button className="btn btn-outline-success" type="submit" onClick={() => navigate('/mappa')}>Login</button>
                             </div>
                         </nav>
-
                     </div>
-
                 </header>
             </div>
             <div className='map-container'>
                 <div className='map-content'>
-                    <h1>Mappa dei Luoghi</h1> {/* Titolo della mappa */}
+                    <h1>Mappa dei Luoghi</h1>
                     <div className='mappa'>
                         {locationLoaded ? (
                             <Map
@@ -124,7 +148,6 @@ const Mappa = () => {
                                     console.log('Camera cambiata:', ev.detail.center, 'zoom:', ev.detail.zoom)
                                 }
                                 onClick={handleMapClick}
-                            // Imposta il riferimento alla mappa
                             >
                                 <PoiMarkers pois={locations} />
                             </Map>
@@ -133,22 +156,20 @@ const Mappa = () => {
                         )}
                     </div>
                 </div>
-                {/* Lista dei marker spostata all'esterno del contenitore della mappa */}
                 <MarkerList locations={locations} />
             </div>
         </APIProvider>
     );
 };
 
-// Componente per visualizzare la lista dei marker
 const MarkerList = ({ locations }: { locations: Poi[] }) => {
     return (
         <div className="marker-list">
-            <h2>Posizioni salvate</h2>
+            <h2>Markers</h2>
             <ul>
-                {locations.slice().map((poi) => (
+                {locations.map((poi) => (
                     <li key={poi.key}>
-                        Posizione {poi.key}: Lat {poi.location.lat}, Lng {poi.location.lng}
+                        {`Lat: ${poi.location.lat}, Lng: ${poi.location.lng}`}
                     </li>
                 ))}
             </ul>
@@ -193,5 +214,4 @@ const PoiMarkers = (props: { pois: Poi[] }) => {
 
     return null; // Non viene restituito JSX qui
 };
-
 export default Mappa;
