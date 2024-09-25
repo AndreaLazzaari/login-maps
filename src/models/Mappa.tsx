@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { db } from '../firebaseConfig'; // Assicurati che la configurazione di Firebase sia corretta
 import { collection, getDocs, setDoc, doc } from "firebase/firestore"; // Importa setDoc e doc
 
-type Poi = { key: string; location: google.maps.LatLngLiteral };
+type Poi = { key: string; location: google.maps.LatLngLiteral; imgage: ImageData | null };
 
 const Mappa = () => {
     const [locations, setLocations] = useState<Poi[]>([]);
@@ -47,7 +47,8 @@ const Mappa = () => {
                 location: {
                     lat: doc.data().lat,
                     lng: doc.data().lng
-                }
+                },
+                imgage: null,
             }));
             setLocations(poiData);
             console.log('Posizioni ottenute da Firestore:', poiData);
@@ -84,7 +85,8 @@ const Mappa = () => {
             const newKey = `${locations.length + 1}`;
             const newLocation: Poi = {
                 key: newKey,
-                location: { lat: latLng.lat, lng: latLng.lng }
+                location: { lat: latLng.lat, lng: latLng.lng },
+                imgage: null,
             };
 
             setLocations(prevLocations => {
