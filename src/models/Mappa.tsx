@@ -48,14 +48,11 @@ const Mappa = () => {
         const token = Cookies.get('token');
         if (token) {
             setIsLoggedIn(true);
-            // Se il token non esiste, reindirizza alla pagina di login
-            console.log('sei Loggato')
-        }
-        if (!token) {
+            console.log('Sei loggato');
+        } else {
             setIsLoggedIn(false);
-            // Se il token non esiste, reindirizza alla pagina di login
-            navigate('/login');
-            console.log('non sei loggato')
+
+            console.log('Non sei loggato');
         }
     }, [navigate]);
 
@@ -98,13 +95,11 @@ const Mappa = () => {
             await uploadBytes(storageRef, file);
             const imageUrl = await getDownloadURL(storageRef);
 
-
             const updatedMarker = { ...marker, image: imageUrl };
             setLocations(prevLocations => {
                 const updatedLocations = prevLocations.map(loc => loc.key === marker.key ? updatedMarker : loc);
                 return updatedLocations;
             });
-
 
             await saveMarkerToFirestore(updatedMarker);
         }
@@ -116,29 +111,43 @@ const Mappa = () => {
     }, []);
 
     const handleMapClick = useCallback(async (ev: MapMouseEvent) => {
-        console.log('Mappa cliccata:', ev);
-
-        const latLng = ev.detail.latLng;
-
-        if (latLng) {
-            const newKey = `${locations.length + 1}`;
-            const newLocation: Poi = {
-                key: newKey,
-                location: { lat: latLng.lat, lng: latLng.lng },
-                image: null,
-            };
-
-            setLocations(prevLocations => {
-                const updatedLocations = [...prevLocations, newLocation];
-                console.log('Posizioni aggiornate:', updatedLocations);
-                return updatedLocations;
-            });
-
-            await saveMarkerToFirestore(newLocation);
-        } else {
-            console.log('latLng non definito');
+        if (!isLoggedIn) {
+            alert('devi effettuare il login per salvare la posizione')
         }
-    }, [locations]);
+        else {
+            console.log('Mappa cliccata:', ev);
+
+            const latLng = ev.detail.latLng;
+
+            if (latLng) {
+                const newKey = `${locations.length + 1}`;
+                const newLocation: Poi = {
+                    key: newKey,
+                    location: { lat: latLng.lat, lng: latLng.lng },
+                    image: null,
+                };
+
+                setLocations(prevLocations => {
+                    const updatedLocations = [...prevLocations, newLocation];
+                    console.log('Posizioni aggiornate:', updatedLocations);
+                    return updatedLocations;
+                });
+
+                await saveMarkerToFirestore(newLocation);
+            } else {
+                console.log('latLng non definito');
+            }
+
+        }
+
+    }, [isLoggedIn, locations]);
+
+    const handleLogout = () => {
+        Cookies.remove('token');
+        setIsLoggedIn(false);
+
+        console.log('Logout effettuato');
+    };
 
     return (
         <APIProvider apiKey={'AIzaSyC7vPnO4aSTFK7V62S-4C4TWnx-EID4Vps'} onLoad={() => console.log('API delle mappe caricata.')}>
@@ -169,12 +178,18 @@ const Mappa = () => {
                                         </ul>
                                     </li>
                                 </ul>
-                                <button className="btn btn-outline-success" type="submit" onClick={() => navigate('/mappa')}>Login</button>
+
+                                {isLoggedIn ? (
+                                    <button className="btn btn-outline-danger" onClick={handleLogout}>Logout</button>
+                                ) : (
+                                    <button className="btn btn-outline-success" onClick={() => navigate('/mappa')}>Login</button>
+                                )}
                             </div>
                         </nav>
                     </div>
                 </header>
             </div>
+
             <div className='map-container'>
                 <div className='map-content'>
                     <h1>Mappa dei Luoghi</h1>
@@ -201,7 +216,6 @@ const Mappa = () => {
         </APIProvider>
     );
 };
-
 const MarkerList = ({ locations, onFileChange }: { locations: Poi[]; onFileChange: (event: React.ChangeEvent<HTMLInputElement>, marker: Poi) => void }) => {
     return (
         <div className="marker-list">
