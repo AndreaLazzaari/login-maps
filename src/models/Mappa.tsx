@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { APIProvider, Map, MapCameraChangedEvent, useMap, MapMouseEvent } from '@vis.gl/react-google-maps';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import './Mappa.css';
-import { db } from '../FirebaseConfig';// Assicurati che la configurazione di Firebase sia corretta
+import { db } from '../firebaseConfig';// Assicurati che la configurazione di Firebase sia corretta
 import { collection, getDocs, setDoc, doc } from "firebase/firestore"; // Importa setDoc e doc
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
@@ -129,17 +129,37 @@ const Mappa = () => {
         }
     }, [locations]);
 
+    // // UseEffect per impostare il riferimento alla mappa dopo il caricamento
+    // useEffect(() => {
+    //     if (mapRef.current) {
+    //         // Mappa è disponibile
+    //         console.log("Mappa caricata:", mapRef.current);
+    //     }
+    // }, [mapRef.current]);
+
+    // Funzione per gestire il click sul marker
     const handleMarkerClick = (marker: Poi) => {
         setSelectedMarker(marker);
         if (marker && marker.location && mapRef.current) {
             const googleMap = mapRef.current;
-            if (googleMap) {
-                googleMap.panTo(marker.location);
-            } else {
-                console.error("Mappa non disponibile.");
-            }
+            googleMap.panTo(marker.location);
+            googleMap.setZoom(15);
+        } else {
+            console.error("Mappa non disponibile.");
         }
     };
+
+    // const focusMapOnMarker = (markerPosition: google.maps.LatLngLiteral) => {
+
+    //     if (mapRef.current) {
+
+    //         mapRef.current.panTo(markerPosition);
+
+    //         mapRef.current.setZoom(11); // or use animateCamera if you prefer
+
+    //     }
+
+    // };
 
 
     return (
@@ -162,10 +182,6 @@ const Mappa = () => {
                                     console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                                 }
                                 onClick={handleMapClick}
-                            // onLoad={(map) => {
-                            //     mapRef.current = map;
-                            //     console.log("Mappa caricata:", map)
-                            // }}
                             >
                                 {/* imposta il riferimento alla mappa */}
                                 <PoiMarkers pois={locations} />
