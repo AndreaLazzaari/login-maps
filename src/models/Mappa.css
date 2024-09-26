@@ -266,6 +266,8 @@ h1 {
 
 .editButton {
     background-color: #1159e0;
+    height: 40px;
+    font-size: medium;
 }
 
 .editButton:hover {
