@@ -157,32 +157,16 @@ const Mappa = () => {
                         <nav className="navbar navbar-expand-lg bg-light">
                             <div className="container-fluid">
                                 <a className="navbar-brand" href="#">
-                                    <img className="logo" src="https://www.digitality-consulting.com/wp-content/uploads/2023/02/cropped-loghi.png" alt="Bootstrap" width="30" height="24" />
+                                    <img className="logo2" src="https://www.digitality-consulting.com/wp-content/uploads/2023/02/cropped-loghi.png" alt="Bootstrap" width="30" height="24" />
+
                                 </a>
-                                <ul className="navbar-nav">
-                                    <li className="nav-item">
-                                        <a className="nav-link active" aria-current="page" href="#">Home</a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a className="nav-link" href="#">Link</a>
-                                    </li>
-                                    <li className="nav-item dropdown">
-                                        <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Dropdown
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#">Action</a></li>
-                                            <li><a className="dropdown-item" href="#">Another action</a></li>
-                                            <li><hr className="dropdown-divider" /></li>
-                                            <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
+                                <h2>Digitality Consulting</h2>
+
 
                                 {isLoggedIn ? (
-                                    <button className="btn btn-outline-danger" onClick={handleLogout}>Logout</button>
+                                    <button className="custom-button logout" onClick={handleLogout}><i className="fas fa-sign-out-alt"></i> </button>
                                 ) : (
-                                    <button className="btn btn-outline-success" onClick={() => navigate('/mappa')}>Login</button>
+                                    <button className="login-button2" onClick={() => navigate('/mappa')}>Login</button>
                                 )}
                             </div>
                         </nav>
@@ -191,7 +175,7 @@ const Mappa = () => {
             </div>
 
             <div className='map-container'>
-                <div className='map-content'>
+                <div className='map-content '>
                     <h1>Mappa dei Luoghi</h1>
                     <div className='mappa'>
                         {locationLoaded ? (
@@ -218,17 +202,23 @@ const Mappa = () => {
 };
 const MarkerList = ({ locations, onFileChange }: { locations: Poi[]; onFileChange: (event: React.ChangeEvent<HTMLInputElement>, marker: Poi) => void }) => {
     return (
-        <div className="marker-list">
-            <h2>Markers</h2>
-            <ul>
-                {locations.map((poi) => (
-                    <li key={poi.key}>
-                        {`Lat: ${poi.location.lat}, Lng: ${poi.location.lng}`}
-                        <input type="file" accept="image/*" onChange={(e) => onFileChange(e, poi)} />
-                        {poi.image && <img src={poi.image} alt={`Marker ${poi.key}`} width={50} height={50} />}
-                    </li>
-                ))}
-            </ul>
+        <div className="container ">
+            <h2 className='header'>Markers</h2>
+
+            <div className="marker-list scrollable-element decorative-frame">
+
+
+                <ul>
+                    {locations.map((poi) => (
+                        <li key={poi.key}>
+                            <h6>posizione {poi.key}</h6>
+                            {`Lat: ${poi.location.lat}, Lng: ${poi.location.lng}`}
+                            <input type="file" accept="image/*" onChange={(e) => onFileChange(e, poi)} />
+                            {poi.image && <img src={poi.image} alt={`Marker ${poi.key}`} width={50} height={50} />}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

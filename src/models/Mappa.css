@@ -1,113 +1,224 @@
 .map-container {
     display: flex;
-    /* Usa flexbox per allineare la mappa e la lista orizzontalmente */
     padding: 20px;
     justify-content: space-between;
     min-height: 800px;
-    /* Altezza minima per il contenitore */
-    margin: 0;
-    /* Rimuove il margine a sinistra */
+    margin-top: 100px;
 }
 
 .map-content {
     display: flex;
-    /* Usa flexbox per disporre il titolo e la mappa verticalmente */
     flex-direction: column;
-    /* Colonna per il titolo e la mappa */
     margin-left: -300px;
     margin-right: 300px;
-    /* Margine a destra per distanziare la lista */
 }
 
 .mappa {
     width: 600px;
-    /* Larghezza fissa per la mappa */
     height: 600px;
-    /* Altezza fissa per la mappa */
     margin-top: 10px;
-    /* Margine superiore per distanziare il titolo dalla mappa */
     background-color: #f4f4f4;
-    /* Colore di sfondo leggero */
     border-radius: 8px;
-    /* Angoli arrotondati */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    /* Ombra per dare profondità */
 }
 
-.marker-list {
-    flex-grow: 1;
-    /* Permette alla lista di occupare lo spazio rimanente */
-    background: #f4f4f4;
-    /* Colore di sfondo bianco per la lista */
-    border-radius: 8px;
-    /* Angoli arrotondati */
+.scrollable-element {
+    height: 550px;
+    width: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    /* Ombra per la lista */
+}
+
+.custom-button {
+    padding: 10px 20px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: uppercase;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    cursor: pointer;
+    margin-right: 50px;
+}
+
+.custom-button.login {
+    background-color: #28a745;
+    /* Verde per il login */
+    color: white;
+    border-color: #28a745;
+}
+
+.custom-button.logout {
+    background-color: #dc3545;
+    /* Rosso per il logout */
+    color: white;
+    border-color: #dc3545;
+}
+
+.custom-button:hover {
+    background-color: transparent;
+    color: black;
+}
+
+.custom-button.login:hover {
+    border-color: #28a745;
+}
+
+.custom-button.logout:hover {
+    border-color: #dc3545;
+}
+
+/* Stile per la track della scrollbar */
+.scrollable-element::-webkit-scrollbar {
+    width: 12px;
+    /* Larghezza della scrollbar */
+}
+
+.scrollable-element::-webkit-scrollbar-track {
+
+    /* Rendi trasparente il track */
+}
+
+.login-button2 {
+    padding: 12px;
+    /* Aumenta il padding */
+    border: none;
+    border-radius: 4px;
+    background: #3485BD;
+    /* Colore di sfondo del pulsante */
+    color: #ffffff;
+    /* Colore del testo */
+    font-size: 18px;
+    /* Aumenta la dimensione del font */
+    cursor: pointer;
+    transition: background 0.2s ease;
+    width: 100%;
+    /* Larghezza al 100% */
+    max-width: 100px;
+    margin-left: 0px;
+    margin-right: 50px;
+    /* Larghezza massima */
+}
+
+.login-button2:hover {
+    background: #4ba7e9;
+    /* Colore del pulsante quando si passa sopra con il mouse */
+}
+
+/* Stile per la track della scrollbar */
+
+
+/* Stile per il thumb della scrollbar */
+.scrollable-element::-webkit-scrollbar-thumb {
+    background: #8d8d8d;
+    /* Colore del thumb */
+    border-radius: 10px;
+    opacity: 1;
+    background-color: transparent;
+    /* Raggio per rendere il thumb più arrotondato */
+}
+
+.scrollable-element::-webkit-scrollbar-thumb:hover {
+    background: #bdbdbd;
+    opacity: 1;
+    /* Colore del thumb quando si passa il mouse */
+}
+
+.decorative-frame {
+    border: 2px solid #131313;
+    border-radius: 15px;
+    padding-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #f4f4f4, #e1e1e1);
+    position: relative;
+}
+
+.decorative-frame::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px dashed #8e9297;
+    border-radius: 15px;
+    z-index: -1;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-right: -200px;
+    margin-top: 100px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header {
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: -50px;
+}
+
+.header .marker-list {
+    flex-grow: 1;
+    background: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    /* Padding interno per la lista */
     text-align: left;
-    /* Allinea il testo a sinistra */
     max-width: 300px;
-    /* Larghezza massima per la lista */
     margin-left: 150px;
     margin-right: -200px;
-    /* Margine a sinistra per distanziare la lista dalla mappa */
 }
 
 h1 {
     margin: 0;
-    /* Rimuove margini */
     padding: 20px 0;
-    /* Padding verticale per il titolo */
-
-    /* Colore del testo */
     text-align: center;
-    /* Centra il titolo */
     font-size: 24px;
-    /* Dimensione del font */
 }
-
-
-
-
 
 .marker-list h2 {
     margin-top: 0;
-    /* Rimuove il margine superiore */
     color: #333;
-    /* Colore del titolo della lista */
     font-size: 20px;
-    /* Dimensione del font */
     text-align: center;
-    /* Centra il titolo della lista */
 }
 
 .marker-list ul {
     list-style: none;
-    /* Rimuove i punti elenco */
     padding: 0;
-    /* Rimuove il padding */
     margin: 0;
-    /* Rimuove il margine */
 }
 
 .marker-list li {
     padding: 10px;
-    /* Padding per ogni elemento della lista */
     border-bottom: 1px solid #eee;
-    /* Linea separatrice */
     color: #555;
-    /* Colore del testo */
     margin: 0;
-    /* Rimuove il margine per ogni elemento */
 }
 
 .marker-list li:last-child {
     border-bottom: none;
-    /* Rimuove la linea per l'ultimo elemento */
 }
 
 .marker-list li:hover {
     background-color: #f1f1f1;
-    /* Cambia colore al passaggio del mouse */
 }

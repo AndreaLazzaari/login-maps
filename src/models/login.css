@@ -1,27 +1,33 @@
-/* Stili per il contenitore principale del login */
 .login-container {
     display: flex;
-    /* Usa flexbox per allineare il logo e il modulo di login */
-    align-items: center;
-    justify-content: space-between;
-    /* Allinea verticalmente al centro */
+    align-items: flex-start;
+    /* Allinea verticalmente in alto */
+    justify-content: flex-start;
+    /* Allinea orizzontalmente a sinistra */
     padding: 20px;
-    /* Padding attorno al contenitore */
-    height: 100vh;
-    /* Altezza minima per il contenitore */
 
-    /* Colore di sfondo della pagina */
 }
 
 .logo {
-    width: 500px;
-    /* Larghezza del logo */
-    height: 500px;
-    /* Altezza del logo */
+    width: 600px;
+    /* Mantieni l'ingrandimento */
+    height: auto;
+    /* Permetti che l'altezza si adatti proporzionalmente */
+    max-width: 100%;
+    /* Imposta la larghezza massima al 100% per evitare overflow */
     margin-right: 40px;
-    /* Spazio tra il logo e il modulo */
-    margin-top: -100px;
-    /* Sposta il logo verso l'alto */
+    margin-left: -100px;
+    /* Margine a destra */
+
+    /* Assicurati che venga trattato come un blocco */
+}
+
+.logo:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
 .login-card {
@@ -31,7 +37,8 @@
     /* Arrotonda gli angoli della card */
     padding: 4rem;
     /* Padding interno della card */
-    width: 20rem;
+    width: 800px;
+    margin-top: 100px;
     /* Larghezza massima della card */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     /* Ombra della card */
@@ -47,7 +54,8 @@
 .input-wrapper {
     margin-bottom: 1.5rem;
     /* Spazio tra i campi di input */
-    width: 100%;
+    width: 250px;
+    margin-top: 20px;
     /* Imposta larghezza del wrapper per i campi di input */
 }
 
@@ -109,6 +117,10 @@
     /* Rimuovi il bordo di default */
 }
 
+.title {
+    color: #444346;
+}
+
 /* Modifica il pulsante di login per renderlo più grande */
 .login-button {
     padding: 12px;
@@ -126,22 +138,49 @@
     width: 100%;
     /* Larghezza al 100% */
     max-width: 100px;
-    margin-left: 20px;
+    margin-left: 0px;
     /* Larghezza massima */
 }
 
 .login-button:hover {
-    background: #4752c4;
+    background: #84adca;
     /* Colore del pulsante quando si passa sopra con il mouse */
 }
 
+hr {
+    border: 1px solid #000000;
+    width: 500px;
+}
+
 .error-message {
-    color: #f04747;
+    color: #000000;
     /* Colore rosso per i messaggi di errore */
-    font-size: 14px;
+    font-size: 20px;
     /* Dimensione del font */
     text-align: center;
     /* Allinea il testo al centro */
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     /* Margine sopra il messaggio di errore */
+    padding: 15px;
+    /* Aggiungi padding per spazio interno */
+    font-weight: 600;
+
+
+    /* Sfondo leggermente trasparente per contrasto */
+    border-radius: 8px;
+    /* Bordo arrotondato */
+    display: flex;
+    /* Usa flexbox per disporre gli elementi */
+    justify-content: center;
+    align-items: center;
+    /* Centra orizzontalmente e verticalmente */
+}
+
+.error-message::before {
+
+    /* Icona di avvertimento */
+    margin-right: 10px;
+    /* Spazio tra l'icona e il testo */
+    font-size: 24px;
+    /* Dimensione dell'icona */
 }

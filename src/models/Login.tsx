@@ -72,7 +72,7 @@ const Login: React.FC = () => {
             />
             <div className="login-card">
                 <h2 className="title">Accedi al tuo account</h2>
-
+                <hr />
                 <form className="login-form" onSubmit={handleSubmit}>
                     <div className="input-wrapper">
                         <input
@@ -84,7 +84,6 @@ const Login: React.FC = () => {
                             placeholder="Username"
                         />
                     </div>
-
                     <div className="input-wrapper">
                         <input
                             type="password"
@@ -97,7 +96,6 @@ const Login: React.FC = () => {
                     </div>
                     <button type="submit" className="login-button">Login</button>
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
-
                     <div className="links">
                         <a href="#" className="forgot-password">Password dimenticata?</a>
                         <a href="#" className="register">Registrati</a>

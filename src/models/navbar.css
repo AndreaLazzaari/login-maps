@@ -1,7 +1,7 @@
 .navbar {
     width: 100%;
     /* Occupa tutta la larghezza */
-    height: 80px;
+    height: 120px;
     /* Imposta l'altezza della navbar (puoi regolarla come desideri) */
     background-color: #f8f9fa;
     /* Colore di sfondo della navbar */
@@ -19,14 +19,15 @@
 
 /* Assicurati che il contenuto della pagina non si sovrapponga alla navbar */
 body {
-    padding-top: 80px;
+    margin-top: 80px;
     /* Imposta un padding per evitare che il contenuto della pagina si sovrapponga alla navbar */
 }
 
-.logo {
+.logo2 {
     height: 200px;
     width: 200px;
-    margin-bottom: -100px;
+    margin-bottom: 0px;
+    margin-left: -50px;
 }
 
 /* Aumenta l'altezza del contenuto interno della navbar */
