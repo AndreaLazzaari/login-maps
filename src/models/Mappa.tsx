@@ -269,30 +269,39 @@ const MarkerList = ({
                     {locations.map((poi) => (
                         <li key={poi.key} className="poi-item">
                             <h6>Posizione {poi.key}</h6>
-                            <div className="description-row">
-                                <p className="description">{poi.desc || 'Nessuna descrizione disponibile'}</p>
-                                {isLoggedIn && (
-                                    <button className="btn editButton" onClick={() => setEditingKey(poi.key)}>
-                                        <i className="fa-solid fa-pen-to-square text-light"></i>
-                                    </button>
-                                )}
-                            </div>
-
                             {editingKey === poi.key ? (
-                                <div className="edit-row">
-                                    <input
-                                        type="text"
-                                        placeholder="Modifica descrizione"
-                                        value={editingDesc[poi.key] ?? poi.desc ?? ''}
-                                        onChange={e => handleDescriptionChange(e.target.value, poi)}
-                                    />
-                                    <button className='btn editButton ms-2' onClick={() => handleSaveDesc(poi)}>
-                                        <span className='text-light'>Salva</span>
-                                    </button>
-                                </div>
-                            ) : null}
+                                <>
+                                    <div className="edit-row">
+                                        <input
+                                            type="text"
+                                            placeholder="Modifica descrizione"
+                                            value={editingDesc[poi.key] ?? poi.desc ?? ''}
+                                            onChange={e => handleDescriptionChange(e.target.value, poi)}
+                                        />
+                                        <button className='btn editButton ms-2' onClick={() => handleSaveDesc(poi)}>
+                                            <span className='text-light'>Salva</span>
+                                        </button>
+                                    </div>
 
-                            <div className="upload-row">
+                                </>
+                            ) : (
+                                <>
+                                    <div className="description-row">
+                                        <p className="description">{poi.desc || 'Nessuna descrizione disponibile'}</p>
+                                        {isLoggedIn && (
+                                            <button className="btn editButton" onClick={() => setEditingKey(poi.key)}>
+                                                <i className="fa-solid fa-pen-to-square text-light"></i>
+                                            </button>
+                                        )}
+                                    </div>
+
+
+                                </>
+                            )}
+
+
+
+                            < div className="upload-row">
                                 {isLoggedIn && (
                                     <input
                                         type="file"
@@ -309,7 +318,7 @@ const MarkerList = ({
                     ))}
                 </ul>
             </div>
-        </div>
+        </div >
     );
 };
 
