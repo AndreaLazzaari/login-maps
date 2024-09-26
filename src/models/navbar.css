@@ -1,0 +1,64 @@
+.navbar {
+    width: 100%;
+    /* Occupa tutta la larghezza */
+    height: 120px;
+    /* Imposta l'altezza della navbar (puoi regolarla come desideri) */
+    background-color: #f8f9fa;
+    /* Colore di sfondo della navbar */
+    position: fixed;
+    /* Mantiene la navbar fissata in cima alla pagina */
+    top: 0;
+    /* Fissa la navbar all'inizio della pagina */
+    left: 0;
+    /* Allinea la navbar al lato sinistro della pagina */
+    z-index: 1000;
+    /* Garantisce che la navbar sia sopra altri contenuti */
+    display: flex;
+
+}
+
+/* Assicurati che il contenuto della pagina non si sovrapponga alla navbar */
+body {
+    margin-top: 80px;
+    /* Imposta un padding per evitare che il contenuto della pagina si sovrapponga alla navbar */
+}
+
+.logo2 {
+    height: 200px;
+    width: 200px;
+    margin-bottom: 0px;
+    margin-left: -50px;
+}
+
+/* Aumenta l'altezza del contenuto interno della navbar */
+.navbar .container-fluid {
+    height: 100%;
+    /* L'altezza sarà uguale alla navbar */
+    display: flex;
+    align-items: center;
+    /* Centra verticalmente gli elementi */
+    justify-content: space-between;
+    /* Distribuisce gli elementi orizzontalmente */
+}
+
+/* Stile per gli elementi della navbar */
+.navbar .navbar-brand,
+.navbar-nav .nav-link {
+    font-size: 18px;
+    /* Font leggermente più grande */
+    padding: 0 15px;
+    /* Padding orizzontale */
+}
+
+/* Modifica il padding del form per allinearlo */
+.navbar .form-control {
+    height: 45px;
+    /* Altezza maggiore per i campi del form */
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}

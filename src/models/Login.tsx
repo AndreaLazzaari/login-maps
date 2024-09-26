@@ -43,7 +43,7 @@ const Login: React.FC = () => {
                     const data = await response.json();
                     console.log('Dati ricevuti:', data);
 
-                    navigate('/mappa');
+                    navigate('/');
 
                     const token = data.data;
                     Cookies.set('token', token, { expires: 7 });
@@ -66,13 +66,13 @@ const Login: React.FC = () => {
     return (
         <div className="login-container">
             <img
-                src="https://imgs.search.brave.com/sshoHrapWfkbOjouesIteQpXDYfcJIWZx0KqfZU4qgs/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/Zm9jdXMuaXQvaW1h/Z2VzLzIwMjMvMDkv/MTgvaW1wZXJvLXJv/bWFuby0tLXNpbWJv/bGlfdzYzMC5qcGc"
+                src="https://www.digitality-consulting.com/wp-content/uploads/2023/01/Logo-Digitality-Consulting-1000-%C3%97-1000-px.png"
                 alt="Logo"
                 className="logo"
             />
             <div className="login-card">
                 <h2 className="title">Accedi al tuo account</h2>
-
+                <hr />
                 <form className="login-form" onSubmit={handleSubmit}>
                     <div className="input-wrapper">
                         <input
@@ -84,7 +84,6 @@ const Login: React.FC = () => {
                             placeholder="Username"
                         />
                     </div>
-
                     <div className="input-wrapper">
                         <input
                             type="password"
@@ -97,7 +96,6 @@ const Login: React.FC = () => {
                     </div>
                     <button type="submit" className="login-button">Login</button>
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
-
                     <div className="links">
                         <a href="#" className="forgot-password">Password dimenticata?</a>
                         <a href="#" className="register">Registrati</a>

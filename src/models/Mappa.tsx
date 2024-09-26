@@ -2,107 +2,224 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { APIProvider, Map, MapCameraChangedEvent, useMap, MapMouseEvent } from '@vis.gl/react-google-maps';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import './Mappa.css';
+import './navbar.css';
+import { useNavigate } from 'react-router-dom';
+import { db } from '../firebaseConfig';
+import { collection, getDocs, setDoc, doc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import Cookies from 'js-cookie';
 
-type Poi = { key: number; location: google.maps.LatLngLiteral };
-
-const initialLocations: Poi[] = [];
+type Poi = { key: string; location: google.maps.LatLngLiteral; image: string | null };
 
 const Mappa = () => {
-    const [locations, setLocation] = useState<Poi[]>(initialLocations);
-    const [defaultLocation, setDefaultLocation] = useState<{ lat: number; lng: number }>({ lat: 38.115556, lng: 13.361389 });
+    const [locations, setLocations] = useState<Poi[]>([]);
+    const navigate = useNavigate();
+    const [defaultCenter, setDefaultCenter] = useState<{ lat: number; lng: number }>({ lat: 38.115556, lng: 13.361389 });
     const [locationLoaded, setLocationLoaded] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    // Funzione per ottenere la posizione dell'utente
+    const storage = getStorage();
+
     const getUserLocation = useCallback(() => {
         if (navigator.geolocation) {
-            navigator.permissions.query({ name: 'geolocation' }).then((result) => {
-                if (result.state === 'granted' || result.state === 'prompt') {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            const lat = position.coords.latitude;
-                            const lng = position.coords.longitude;
-                            setDefaultLocation({ lat, lng });
-                            setLocationLoaded(true);
-                        },
-                        (error) => {
-                            console.log('Errore nella geolocalizzazione:', error);
-                            setLocationLoaded(true);
-                        },
-                        {
-                            enableHighAccuracy: true,
-                            timeout: 5000,
-                            maximumAge: 0,
-                        }
-                    );
-                } else {
-                    console.log('La localizzazione non è stata concessa');
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setDefaultCenter({ lat: latitude, lng: longitude });
                     setLocationLoaded(true);
+                },
+                (error) => {
+                    console.error('Errore nell\'ottenere la posizione:', error);
+                    setLocationLoaded(true);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0,
                 }
-            });
+            );
         } else {
+            console.log('Geolocalizzazione non supportata dal browser.');
             setLocationLoaded(true);
         }
     }, []);
 
     useEffect(() => {
-        getUserLocation();
-    }, [getUserLocation]);
+        const token = Cookies.get('token');
+        if (token) {
+            setIsLoggedIn(true);
+            console.log('Sei loggato');
+        } else {
+            setIsLoggedIn(false);
 
-    // Funzione per gestire il click sulla mappa e aggiungere un marker
-    const handleMapClick = useCallback((ev: MapMouseEvent) => {
-        const latLng = ev.detail.latLng;
-
-        if (latLng) {
-            const newKey = locations.length + 1;
-            const newLocation: Poi = {
-                key: newKey,
-                location: { lat: latLng.lat, lng: latLng.lng }
-            };
-
-            setLocation(prevLocations => [...prevLocations, newLocation]);
+            console.log('Non sei loggato');
         }
-    }, [locations]);
+    }, [navigate]);
 
-    // Funzione per rimuovere un marker in base alla sua chiave
-    const handleRemoveMarker = useCallback((key: number) => {
-        setLocation(prevLocations => prevLocations.filter(location => location.key !== key));
+    const fetchLocationsFromFirestore = async () => {
+        try {
+            const querySnapshot = await getDocs(collection(db, 'alessandro/Markers/Poi'));
+            const poiData: Poi[] = querySnapshot.docs.map(doc => ({
+                key: doc.id,
+                location: {
+                    lat: doc.data().lat,
+                    lng: doc.data().lng
+                },
+                image: doc.data().image || null,
+            }));
+            setLocations(poiData);
+            console.log('Posizioni ottenute da Firestore:', poiData);
+        } catch (error) {
+            console.error('Errore nel recupero delle posizioni da Firestore:', error);
+        }
+    };
+
+    const saveMarkerToFirestore = async (marker: Poi) => {
+        try {
+            const markerRef = doc(collection(db, 'alessandro/Markers/Poi'), marker.key);
+            await setDoc(markerRef, {
+                lat: marker.location.lat,
+                lng: marker.location.lng,
+                image: marker.image
+            });
+            console.log('Marker salvato nel Firestore:', marker);
+        } catch (error) {
+            console.error('Errore nel salvataggio del marker nel Firestore:', error);
+        }
+    };
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>, marker: Poi) => {
+        if (event.target.files && event.target.files[0]) {
+            const file = event.target.files[0];
+            const storageRef = ref(storage, `Alessandro/images/${marker.key}`);
+            await uploadBytes(storageRef, file);
+            const imageUrl = await getDownloadURL(storageRef);
+
+            const updatedMarker = { ...marker, image: imageUrl };
+            setLocations(prevLocations => {
+                const updatedLocations = prevLocations.map(loc => loc.key === marker.key ? updatedMarker : loc);
+                return updatedLocations;
+            });
+
+            await saveMarkerToFirestore(updatedMarker);
+        }
+    };
+
+    useEffect(() => {
+        getUserLocation();
+        fetchLocationsFromFirestore();
     }, []);
 
+    const handleMapClick = useCallback(async (ev: MapMouseEvent) => {
+        if (!isLoggedIn) {
+            alert('devi effettuare il login per salvare la posizione')
+        }
+        else {
+            console.log('Mappa cliccata:', ev);
+
+            const latLng = ev.detail.latLng;
+
+            if (latLng) {
+                const newKey = `${locations.length + 1}`;
+                const newLocation: Poi = {
+                    key: newKey,
+                    location: { lat: latLng.lat, lng: latLng.lng },
+                    image: null,
+                };
+
+                setLocations(prevLocations => {
+                    const updatedLocations = [...prevLocations, newLocation];
+                    console.log('Posizioni aggiornate:', updatedLocations);
+                    return updatedLocations;
+                });
+
+                await saveMarkerToFirestore(newLocation);
+            } else {
+                console.log('latLng non definito');
+            }
+
+        }
+
+    }, [isLoggedIn, locations]);
+
+    const handleLogout = () => {
+        Cookies.remove('token');
+        setIsLoggedIn(false);
+
+        console.log('Logout effettuato');
+    };
+
     return (
-        <>
-            <div className='box'>
-                <h1>Insert markers</h1>
-                <div>
-                    {locations.map((location) => (
-                        <div key={location.key}>
-                            <p>Marker {location.key}</p>
-                            <button onClick={() => handleRemoveMarker(location.key)}>
-                                Remove Marker {location.key}
-                            </button>
-                        </div>
-                    ))}
-                </div>
+        <APIProvider apiKey={'AIzaSyC7vPnO4aSTFK7V62S-4C4TWnx-EID4Vps'} onLoad={() => console.log('API delle mappe caricata.')}>
+            <div>
+                <header>
+                    <div>
+                        <nav className="navbar navbar-expand-lg bg-light">
+                            <div className="container-fluid">
+                                <a className="navbar-brand" href="#">
+                                    <img className="logo2" src="https://www.digitality-consulting.com/wp-content/uploads/2023/02/cropped-loghi.png" alt="Bootstrap" width="30" height="24" />
+
+                                </a>
+                                <h2>Digitality Consulting</h2>
+
+
+                                {isLoggedIn ? (
+                                    <button className="custom-button logout" onClick={handleLogout}><i className="fas fa-sign-out-alt"></i> </button>
+                                ) : (
+                                    <button className="login-button2" onClick={() => navigate('/mappa')}>Login</button>
+                                )}
+                            </div>
+                        </nav>
+                    </div>
+                </header>
             </div>
-            <APIProvider apiKey={'AIzaSyC7vPnO4aSTFK7V62S-4C4TWnx-EID4Vps'} onLoad={() => console.log('Maps API has loaded.')}>
-                <div className='mappa'>
-                    {locationLoaded ? (
-                        <Map
-                            defaultZoom={13}
-                            defaultCenter={defaultLocation}
-                            mapId='DEMO_MAP_ID'
-                            onCameraChanged={(ev: MapCameraChangedEvent) =>
-                                console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
-                            }
-                            onClick={handleMapClick}
-                        >
-                            <PoiMarkers pois={locations} />
-                        </Map>
-                    ) : (
-                        <p>Caricamento della posizione</p>
-                    )}
+
+            <div className='map-container'>
+                <div className='map-content '>
+                    <h1>Mappa dei Luoghi</h1>
+                    <div className='mappa'>
+                        {locationLoaded ? (
+                            <Map
+                                defaultZoom={13}
+                                defaultCenter={defaultCenter}
+                                mapId='DEMO_MAP_ID'
+                                onCameraChanged={(ev: MapCameraChangedEvent) =>
+                                    console.log('Camera cambiata:', ev.detail.center, 'zoom:', ev.detail.zoom)
+                                }
+                                onClick={handleMapClick}
+                            >
+                                <PoiMarkers pois={locations} />
+                            </Map>
+                        ) : (
+                            <p>Caricamento della posizione...</p>
+                        )}
+                    </div>
                 </div>
-            </APIProvider>
-        </>
+                <MarkerList locations={locations} onFileChange={handleFileChange} />
+            </div>
+        </APIProvider>
+    );
+};
+const MarkerList = ({ locations, onFileChange }: { locations: Poi[]; onFileChange: (event: React.ChangeEvent<HTMLInputElement>, marker: Poi) => void }) => {
+    return (
+        <div className="container ">
+            <h2 className='header'>Markers</h2>
+
+            <div className="marker-list scrollable-element decorative-frame">
+
+
+                <ul>
+                    {locations.map((poi) => (
+                        <li key={poi.key}>
+                            <h6>posizione {poi.key}</h6>
+                            {`Lat: ${poi.location.lat}, Lng: ${poi.location.lng}`}
+                            <input type="file" accept="image/*" onChange={(e) => onFileChange(e, poi)} />
+                            {poi.image && <img src={poi.image} alt={`Marker ${poi.key}`} width={50} height={50} />}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
     );
 };
 
@@ -112,7 +229,7 @@ const PoiMarkers = (props: { pois: Poi[] }) => {
 
     const handleClick = useCallback((ev: google.maps.MapMouseEvent) => {
         if (!map || !ev.latLng) return;
-        console.log('marker clicked:', ev.latLng.toString());
+        console.log('Marker cliccato:', ev.latLng.toString());
         map.panTo(ev.latLng);
     }, [map]);
 
@@ -125,20 +242,17 @@ const PoiMarkers = (props: { pois: Poi[] }) => {
     useEffect(() => {
         if (!clusterer.current) return;
 
-        // Pulisce i marker precedenti e aggiungi quelli nuovi
         clusterer.current.clearMarkers();
-        const newMarkers = props.pois.map((poi) => {
+        const markers = props.pois.map(poi => {
             const marker = new google.maps.Marker({
                 position: poi.location,
-                map: map,
+                map,
                 title: `Marker ${poi.key}`,
             });
-
             marker.addListener('click', handleClick);
             return marker;
         });
-
-        clusterer.current.addMarkers(newMarkers);
+        clusterer.current.addMarkers(markers);
     }, [props.pois, handleClick]);
 
     return null;

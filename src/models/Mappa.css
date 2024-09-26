@@ -1,95 +1,224 @@
-html,
-body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+.map-container {
+    display: flex;
+    padding: 20px;
+    justify-content: space-between;
+    min-height: 800px;
+    margin-top: 100px;
+}
+
+.map-content {
     display: flex;
     flex-direction: column;
-}
-/* Div per il testo sopra la mappa */
-.box {
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    /* Sfondo semi-trasparente */
-    text-align: center;
-    font-family: Arial, sans-serif;
-    color: #333;
-    z-index: 1000;
-}
-/* La mappa occupa l'80% dell'altezza e una larghezza ridotta */
-.mappa {
-    width: 80%;
-    /* Riduci la larghezza della mappa */
-    height: 80vh;
-    /* Mappa ridotta al 80% dell'altezza del viewport */
-    margin: 0 auto;
-    /* Centra la mappa orizzontalmente */
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #ccc;
-    /* Aggiungi un bordo opzionale per migliorare l'estetica */
-    border-radius: 10px;
-    /* Arrotonda leggermente gli angoli della mappa */
-}
-/* Div che rimane sotto la mappa */
-.footer {
-    height: 20vh;
-    /* 20% dell'altezza della pagina */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f1f1f1;
-    font-family: Arial, sans-serif;
-}
-.box {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    max-width: 300px;
+    margin-left: -300px;
+    margin-right: 300px;
 }
 
-/* Stile per i bottoni */
-button {
-    background-color: #4CAF50; /* Colore di sfondo verde */
-    color: white; /* Testo bianco */
+.mappa {
+    width: 600px;
+    height: 600px;
+    margin-top: 10px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.scrollable-element {
+    height: 550px;
+    width: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-button {
+    padding: 10px 20px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: uppercase;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    cursor: pointer;
+    margin-right: 50px;
+}
+
+.custom-button.login {
+    background-color: #28a745;
+    /* Verde per il login */
+    color: white;
+    border-color: #28a745;
+}
+
+.custom-button.logout {
+    background-color: #dc3545;
+    /* Rosso per il logout */
+    color: white;
+    border-color: #dc3545;
+}
+
+.custom-button:hover {
+    background-color: transparent;
+    color: black;
+}
+
+.custom-button.login:hover {
+    border-color: #28a745;
+}
+
+.custom-button.logout:hover {
+    border-color: #dc3545;
+}
+
+/* Stile per la track della scrollbar */
+.scrollable-element::-webkit-scrollbar {
+    width: 12px;
+    /* Larghezza della scrollbar */
+}
+
+.scrollable-element::-webkit-scrollbar-track {
+
+    /* Rendi trasparente il track */
+}
+
+.login-button2 {
+    padding: 12px;
+    /* Aumenta il padding */
     border: none;
     border-radius: 4px;
-    padding: 10px 15px;
+    background: #3485BD;
+    /* Colore di sfondo del pulsante */
+    color: #ffffff;
+    /* Colore del testo */
+    font-size: 18px;
+    /* Aumenta la dimensione del font */
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-    margin-top: 10px;
+    transition: background 0.2s ease;
+    width: 100%;
+    /* Larghezza al 100% */
+    max-width: 100px;
+    margin-left: 0px;
+    margin-right: 50px;
+    /* Larghezza massima */
 }
 
-/* Stile hover per i bottoni */
-button:hover {
-    background-color: #45a049; /* Colore più scuro al passaggio del mouse */
+.login-button2:hover {
+    background: #4ba7e9;
+    /* Colore del pulsante quando si passa sopra con il mouse */
 }
 
-/* Stile per i paragrafi dei marker */
-.box p {
-    font-size: 16px;
-    margin: 10px 0;
+/* Stile per la track della scrollbar */
+
+
+/* Stile per il thumb della scrollbar */
+.scrollable-element::-webkit-scrollbar-thumb {
+    background: #8d8d8d;
+    /* Colore del thumb */
+    border-radius: 10px;
+    opacity: 1;
+    background-color: transparent;
+    /* Raggio per rendere il thumb più arrotondato */
 }
 
+.scrollable-element::-webkit-scrollbar-thumb:hover {
+    background: #bdbdbd;
+    opacity: 1;
+    /* Colore del thumb quando si passa il mouse */
+}
 
+.decorative-frame {
+    border: 2px solid #131313;
+    border-radius: 15px;
+    padding-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #f4f4f4, #e1e1e1);
+    position: relative;
+}
 
+.decorative-frame::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px dashed #8e9297;
+    border-radius: 15px;
+    z-index: -1;
+}
 
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-right: -200px;
+    margin-top: 100px;
+}
 
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    .mappa {
-        width: 90%;
-        /* Larghezza maggiore su schermi piccoli */
-        height: 60vh;
-        /* Ridurre ulteriormente la mappa su dispositivi mobili */
-    }
-    .footer {
-        height: 40vh;
-        /* Più spazio sotto la mappa su dispositivi mobili */
-    }
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header {
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: -50px;
+}
+
+.header .marker-list {
+    flex-grow: 1;
+    background: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: left;
+    max-width: 300px;
+    margin-left: 150px;
+    margin-right: -200px;
+}
+
+h1 {
+    margin: 0;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 24px;
+}
+
+.marker-list h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 20px;
+    text-align: center;
+}
+
+.marker-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.marker-list li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    margin: 0;
+}
+
+.marker-list li:last-child {
+    border-bottom: none;
+}
+
+.marker-list li:hover {
+    background-color: #f1f1f1;
 }
