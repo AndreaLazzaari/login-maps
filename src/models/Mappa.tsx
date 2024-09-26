@@ -279,7 +279,7 @@ const MarkerList = ({
                                         value={editingDesc[poi.key] ?? poi.desc ?? ''}
                                         onChange={e => handleDescriptionChange(e.target.value, poi)}
                                     />
-                                    <button className='btn editButton ' onClick={() => handleSaveDesc(poi)}>
+                                    <button className='btn editButton ms-2' onClick={() => handleSaveDesc(poi)}>
                                         <span className='text-light'>Salva</span>
                                     </button>
                                 </>
