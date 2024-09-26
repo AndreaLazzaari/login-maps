@@ -272,7 +272,7 @@ const MarkerList = ({
 
                             {editingKey === poi.key ? (
                                 <>
-                                    {/* Campo di input per modificare la descrizione */}
+
                                     <input
                                         type="text"
                                         placeholder="Modifica descrizione"

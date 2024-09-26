@@ -11,9 +11,9 @@ type ContextProp = {
     children: React.ReactNode
 }
 
-export const AppContext = React.createContext({} as ValueProp); //create the context API
+export const AppContext = React.createContext({} as ValueProp);
 
-//function body
+
 export default function Context({ children }: ContextProp) {
 
     const [userId, setUserId] = useState<string>('');

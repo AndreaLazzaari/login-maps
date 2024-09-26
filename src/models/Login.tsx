@@ -24,7 +24,7 @@ const Login: React.FC = () => {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        // Verifica le credenziali inserite
+
         if (credenziali.username === 'admin' && credenziali.password === 'admin') {
             try {
                 const response = await fetch('/api/Login', {
