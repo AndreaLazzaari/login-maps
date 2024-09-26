@@ -176,6 +176,47 @@ li {
     margin-top: -50px;
 }
 
+.poi-item {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.description-row {
+    display: flex;
+    justify-content: space-between;
+    /* Allinea descrizione a sinistra e pulsante a destra */
+    align-items: center;
+    /* Allinea verticalmente al centro */
+}
+
+.description {
+    margin: 0;
+    /* Rimuove margini predefiniti del paragrafo */
+}
+
+.edit-row {
+    display: flex;
+    justify-content: space-between;
+    /* Allinea input e pulsante di salvataggio */
+    margin-top: 5px;
+    /* Spazio tra la riga di descrizione e l'edit row */
+}
+
+.upload-row {
+    display: flex;
+    justify-content: space-between;
+    /* Allinea il caricamento dell'immagine */
+    align-items: center;
+    /* Allinea verticalmente al centro */
+    margin-top: 5px;
+    /* Spazio sopra questa riga */
+}
+
+.upload-row input[type="file"] {
+    margin-right: 10px;
+    /* Aggiunge spazio tra il pulsante e l'immagine */
+}
+
 .header .marker-list {
     flex-grow: 1;
     background: #f4f4f4;
