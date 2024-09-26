@@ -3,22 +3,25 @@
     padding: 20px;
     justify-content: space-between;
     min-height: 800px;
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 .map-content {
     display: flex;
     flex-direction: column;
-    margin-left: -300px;
-    margin-right: 300px;
+    margin-top: 45px;
+    margin-left: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
 }
 
 .mappa {
-    width: 600px;
-    height: 600px;
-    margin-top: 10px;
+    width: 1000px;
+    height: 750px;
+
     background-color: #f4f4f4;
     border-radius: 8px;
+
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -85,7 +88,7 @@
 }
 
 .login-button2 {
-    padding: 12px;
+
     /* Aumenta il padding */
     border: none;
     border-radius: 4px;
@@ -98,8 +101,10 @@
     cursor: pointer;
     transition: background 0.2s ease;
     width: 100%;
+    height: 100%;
     /* Larghezza al 100% */
     max-width: 100px;
+    max-height: 37px;
     margin-left: 0px;
     margin-right: 50px;
     /* Larghezza massima */
@@ -155,7 +160,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-right: -200px;
+
     margin-top: 100px;
 }
 

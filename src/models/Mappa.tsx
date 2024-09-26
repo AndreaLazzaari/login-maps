@@ -160,7 +160,7 @@ const Mappa = () => {
                                     <img className="logo2" src="https://www.digitality-consulting.com/wp-content/uploads/2023/02/cropped-loghi.png" alt="Bootstrap" width="30" height="24" />
 
                                 </a>
-                                <h2>Digitality Consulting</h2>
+                                <h3>Digitality Consulting</h3>
 
 
                                 {isLoggedIn ? (
@@ -176,7 +176,6 @@ const Mappa = () => {
 
             <div className='map-container'>
                 <div className='map-content '>
-                    <h1>Mappa dei Luoghi</h1>
                     <div className='mappa'>
                         {locationLoaded ? (
                             <Map
