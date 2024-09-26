@@ -9,7 +9,7 @@ import { collection, getDocs, setDoc, doc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Cookies from 'js-cookie';
 
-type Poi = { key: string; location: google.maps.LatLngLiteral; image: string | null };
+type Poi = { key: string; location: google.maps.LatLngLiteral; image: string | null; desc: string | null };
 
 const Mappa = () => {
     const [locations, setLocations] = useState<Poi[]>([]);
@@ -17,6 +17,7 @@ const Mappa = () => {
     const [defaultCenter, setDefaultCenter] = useState<{ lat: number; lng: number }>({ lat: 38.115556, lng: 13.361389 });
     const [locationLoaded, setLocationLoaded] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [editingDesc, setEditingDesc] = useState<{ [key: string]: string }>({});
 
     const storage = getStorage();
 
@@ -66,6 +67,7 @@ const Mappa = () => {
                     lng: doc.data().lng
                 },
                 image: doc.data().image || null,
+                desc: doc.data().desc || null
             }));
             setLocations(poiData);
             console.log('Posizioni ottenute da Firestore:', poiData);
@@ -80,7 +82,8 @@ const Mappa = () => {
             await setDoc(markerRef, {
                 lat: marker.location.lat,
                 lng: marker.location.lng,
-                image: marker.image
+                image: marker.image,
+                desc: marker.desc
             });
             console.log('Marker salvato nel Firestore:', marker);
         } catch (error) {
@@ -125,6 +128,7 @@ const Mappa = () => {
                     key: newKey,
                     location: { lat: latLng.lat, lng: latLng.lng },
                     image: null,
+                    desc: null,
                 };
 
                 setLocations(prevLocations => {
@@ -148,6 +152,17 @@ const Mappa = () => {
 
         console.log('Logout effettuato');
     };
+    const onDescriptionChange = async (newDescription: string, marker: Poi) => {
+        const updatedMarker = { ...marker, desc: newDescription };
+
+        setLocations(prevLocations => {
+            const updatedLocations = prevLocations.map(loc => loc.key === marker.key ? updatedMarker : loc);
+            return updatedLocations;
+        });
+
+        await saveMarkerToFirestore(updatedMarker);
+    };
+
 
     return (
         <APIProvider apiKey={'AIzaSyC7vPnO4aSTFK7V62S-4C4TWnx-EID4Vps'} onLoad={() => console.log('API delle mappe caricata.')}>
@@ -194,12 +209,18 @@ const Mappa = () => {
                         )}
                     </div>
                 </div>
-                <MarkerList locations={locations} onFileChange={handleFileChange} />
+                <MarkerList locations={locations} onFileChange={handleFileChange} onDescriptionChange={onDescriptionChange} isLoggedIn={isLoggedIn} />
             </div>
         </APIProvider>
     );
 };
-const MarkerList = ({ locations, onFileChange }: { locations: Poi[]; onFileChange: (event: React.ChangeEvent<HTMLInputElement>, marker: Poi) => void }) => {
+const MarkerList = ({ locations, onFileChange, onDescriptionChange, isLoggedIn }: { locations: Poi[]; onFileChange: (event: React.ChangeEvent<HTMLInputElement>, marker: Poi) => void, onDescriptionChange: (newDescription: string, marker: Poi) => void, isLoggedIn: boolean }) => {
+
+    const handleSaveDesc = (marker: Poi) => {
+        const newDescription = marker.desc || "";
+        onDescriptionChange(newDescription, marker);
+    };
+
     return (
         <div className="container ">
             <h2 className='header'>Markers</h2>
@@ -211,8 +232,23 @@ const MarkerList = ({ locations, onFileChange }: { locations: Poi[]; onFileChang
                     {locations.map((poi) => (
                         <li key={poi.key}>
                             <h6>posizione {poi.key}</h6>
-                            {`Lat: ${poi.location.lat}, Lng: ${poi.location.lng}`}
-                            <input type="file" accept="image/*" onChange={(e) => onFileChange(e, poi)} />
+                            <input
+                                type="text"
+                                placeholder="Modifica descrizione"
+                                value={poi.desc ?? ''} // Assicurati che 'description' sia una proprietà del tuo oggetto 'poi'
+                                onChange={(e) => onDescriptionChange(e.target.value, poi)} // Funzione per gestire il cambiamento
+                            />
+                            {/* Pulsante per salvare la descrizione */}
+                            <button onClick={() => handleSaveDesc(poi)}>
+                                Salva descrizione
+                            </button>
+                            {isLoggedIn && ( // Mostra l'input solo se isLoggedIn è true
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => onFileChange(e, poi)}
+                                />
+                            )}
                             {poi.image && <img src={poi.image} alt={`Marker ${poi.key}`} width={50} height={50} />}
                         </li>
                     ))}
