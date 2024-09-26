@@ -72,7 +72,7 @@ const Login: React.FC = () => {
             />
             <div className="login-card">
                 <h2 className="title">Accedi al tuo account</h2>
-                <hr />
+                <hr className='hr' />
                 <form className="login-form" onSubmit={handleSubmit}>
                     <div className="input-wrapper">
                         <input

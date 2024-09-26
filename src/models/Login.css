@@ -11,11 +11,11 @@
 
 /* Aggiungi dimensione al logo e stile */
 .logo {
-    width: 120px;
+    width: 280px;
     margin-bottom: 30px;
-    border-radius: 50%;
+    /* border-radius: 50%; */
     border: 3px solid #fff;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); */
 }
 
 /* Stile per la card di login */
@@ -25,25 +25,27 @@
     border-radius: 15px;
     box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
+    height: 600px;
     text-align: center;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .title {
-    font-size: 26px;
-    font-weight: 700;
+    font-size: 46px;
+    font-weight: 900px;
     margin-bottom: 25px;
     color: #333;
 }
 
 /* Stile per gli input */
 .input-wrapper {
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .input-field {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     border-radius: 8px;
     border: 1px solid #ccc;
     font-size: 16px;
@@ -96,6 +98,11 @@
     margin-top: 10px;
     font-size: 14px;
 }
+
+.hr {
+color: white;
+}
+
 
 /* Stile responsive per schermi più piccoli */
 @media (max-width: 480px) {
