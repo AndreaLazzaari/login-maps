@@ -267,47 +267,44 @@ const MarkerList = ({
 
                 <ul>
                     {locations.map((poi) => (
-                        <li key={poi.key}>
+                        <li key={poi.key} className="poi-item">
                             <h6>Posizione {poi.key}</h6>
+                            <div className="description-row">
+                                <p className="description">{poi.desc || 'Nessuna descrizione disponibile'}</p>
+                                {isLoggedIn && (
+                                    <button className="btn editButton" onClick={() => setEditingKey(poi.key)}>
+                                        <i className="fa-solid fa-pen-to-square text-light"></i>
+                                    </button>
+                                )}
+                            </div>
 
                             {editingKey === poi.key ? (
-                                <>
-                                    {/* Campo di input per modificare la descrizione */}
+                                <div className="edit-row">
                                     <input
                                         type="text"
                                         placeholder="Modifica descrizione"
                                         value={editingDesc[poi.key] ?? poi.desc ?? ''}
                                         onChange={e => handleDescriptionChange(e.target.value, poi)}
                                     />
-                                    <button onClick={() => handleSaveDesc(poi)}>
-                                        Salva descrizione
+                                    <button className='btn editButton ms-2' onClick={() => handleSaveDesc(poi)}>
+                                        <span className='text-light'>Salva</span>
                                     </button>
-                                </>
-                            ) : (
-                                <>
-                                    {!isLoggedIn ? (
-                                        <p>{poi.desc}</p>
-                                    ) : (
-                                        <>
-                                            <p>{poi.desc || 'Nessuna descrizione disponibile'}</p>
-                                            <button onClick={() => setEditingKey(poi.key)}>
-                                                Modifica
-                                            </button>
-                                        </>
-                                    )}
-                                </>
-                            )}
+                                </div>
+                            ) : null}
 
-                            {isLoggedIn && (
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={e => onFileChange(e, poi)}
-                                />
-                            )}
-                            {poi.image && (
-                                <img src={poi.image} alt={`Marker ${poi.key}`} width={50} height={50} />
-                            )}
+                            <div className="upload-row">
+                                {isLoggedIn && (
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className='btn'
+                                        onChange={e => onFileChange(e, poi)}
+                                    />
+                                )}
+                                {poi.image && (
+                                    <img src={poi.image} alt={`Marker ${poi.key}`} width={50} height={50} />
+                                )}
+                            </div>
                         </li>
                     ))}
                 </ul>

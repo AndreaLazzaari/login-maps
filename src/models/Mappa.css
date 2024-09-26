@@ -82,11 +82,6 @@
     /* Larghezza della scrollbar */
 }
 
-.scrollable-element::-webkit-scrollbar-track {
-
-    /* Rendi trasparente il track */
-}
-
 .login-button2 {
 
     /* Aumenta il padding */
@@ -181,6 +176,47 @@ li {
     margin-top: -50px;
 }
 
+.poi-item {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.description-row {
+    display: flex;
+    justify-content: space-between;
+    /* Allinea descrizione a sinistra e pulsante a destra */
+    align-items: center;
+    /* Allinea verticalmente al centro */
+}
+
+.description {
+    margin: 0;
+    /* Rimuove margini predefiniti del paragrafo */
+}
+
+.edit-row {
+    display: flex;
+    justify-content: space-between;
+    /* Allinea input e pulsante di salvataggio */
+    margin-top: 5px;
+    /* Spazio tra la riga di descrizione e l'edit row */
+}
+
+.upload-row {
+    display: flex;
+    justify-content: space-between;
+    /* Allinea il caricamento dell'immagine */
+    align-items: center;
+    /* Allinea verticalmente al centro */
+    margin-top: 5px;
+    /* Spazio sopra questa riga */
+}
+
+.upload-row input[type="file"] {
+    margin-right: 10px;
+    /* Aggiunge spazio tra il pulsante e l'immagine */
+}
+
 .header .marker-list {
     flex-grow: 1;
     background: #f4f4f4;
@@ -226,4 +262,15 @@ h1 {
 
 .marker-list li:hover {
     background-color: #f1f1f1;
+}
+
+.editButton {
+    background-color: #1159e0;
+    height: 40px;
+    font-size: medium;
+}
+
+.editButton:hover {
+    background: #3a70b3;
+    /* opacity: 1; */
 }
