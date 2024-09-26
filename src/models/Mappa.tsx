@@ -279,8 +279,8 @@ const MarkerList = ({
                                         value={editingDesc[poi.key] ?? poi.desc ?? ''}
                                         onChange={e => handleDescriptionChange(e.target.value, poi)}
                                     />
-                                    <button onClick={() => handleSaveDesc(poi)}>
-                                        Salva descrizione
+                                    <button className='btn editButton ' onClick={() => handleSaveDesc(poi)}>
+                                        <span className='text-light'>Salva</span>
                                     </button>
                                 </>
                             ) : (
@@ -289,10 +289,10 @@ const MarkerList = ({
                                         <p>{poi.desc}</p>
                                     ) : (
                                         <>
-                                            <p>{poi.desc || 'Nessuna descrizione disponibile'}</p>
-                                            <button onClick={() => setEditingKey(poi.key)}>
-                                                Modifica
-                                            </button>
+                                            <p>{poi.desc || 'Nessuna descrizione disponibile'}<span><button className='btn editButton ms-2' onClick={() => setEditingKey(poi.key)}>
+                                                <i className="fa-solid fa-pen-to-square text-light"></i>
+                                            </button></span></p>
+
                                         </>
                                     )}
                                 </>
@@ -302,6 +302,7 @@ const MarkerList = ({
                                 <input
                                     type="file"
                                     accept="image/*"
+                                    className='btn'
                                     onChange={e => onFileChange(e, poi)}
                                 />
                             )}

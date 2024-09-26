@@ -82,11 +82,6 @@
     /* Larghezza della scrollbar */
 }
 
-.scrollable-element::-webkit-scrollbar-track {
-
-    /* Rendi trasparente il track */
-}
-
 .login-button2 {
 
     /* Aumenta il padding */
@@ -226,4 +221,13 @@ h1 {
 
 .marker-list li:hover {
     background-color: #f1f1f1;
+}
+
+.editButton {
+    background-color: #1159e0;
+}
+
+.editButton:hover {
+    background: #3a70b3;
+    /* opacity: 1; */
 }
