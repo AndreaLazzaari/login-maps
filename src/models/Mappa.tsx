@@ -17,7 +17,7 @@ const Mappa = () => {
     const [defaultCenter, setDefaultCenter] = useState<{ lat: number; lng: number }>({ lat: 38.115556, lng: 13.361389 });
     const [locationLoaded, setLocationLoaded] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [editingDesc, setEditingDesc] = useState<{ [key: string]: string }>({});
+
 
     const storage = getStorage();
 
@@ -214,12 +214,49 @@ const Mappa = () => {
         </APIProvider>
     );
 };
-const MarkerList = ({ locations, onFileChange, onDescriptionChange, isLoggedIn }: { locations: Poi[]; onFileChange: (event: React.ChangeEvent<HTMLInputElement>, marker: Poi) => void, onDescriptionChange: (newDescription: string, marker: Poi) => void, isLoggedIn: boolean }) => {
+const MarkerList = ({
+    locations,
+    onFileChange,
+    onDescriptionChange,
+    isLoggedIn
+}: {
+    locations: Poi[];
+    onFileChange: (event: React.ChangeEvent<HTMLInputElement>, marker: Poi) => void;
+    onDescriptionChange: (newDescription: string, marker: Poi) => void;
+    isLoggedIn: boolean;
+}) => {
+    const [editingDesc, setEditingDesc] = useState<{ [key: string]: string }>({});
+    const [editingKey, setEditingKey] = useState<string | null>(null);
+
+
 
     const handleSaveDesc = (marker: Poi) => {
-        const newDescription = marker.desc || "";
-        onDescriptionChange(newDescription, marker);
+        if (!isLoggedIn) {
+            alert('devi effettuare il login per salvare la descrizione')
+        } else {
+            const newDescription = editingDesc[marker.key] || '';
+            onDescriptionChange(newDescription, marker);
+            setEditingKey(null);
+            setEditingDesc(prevState => ({
+                ...prevState,
+                [marker.key]: '',
+            }));
+
+        }
+
+    }
+
+
+
+
+
+    const handleDescriptionChange = (value: string, marker: Poi) => {
+        setEditingDesc(prevState => ({
+            ...prevState,
+            [marker.key]: value,
+        }));
     };
+
 
     return (
         <div className="container ">
@@ -231,25 +268,46 @@ const MarkerList = ({ locations, onFileChange, onDescriptionChange, isLoggedIn }
                 <ul>
                     {locations.map((poi) => (
                         <li key={poi.key}>
-                            <h6>posizione {poi.key}</h6>
-                            <input
-                                type="text"
-                                placeholder="Modifica descrizione"
-                                value={poi.desc ?? ''} // Assicurati che 'description' sia una proprietà del tuo oggetto 'poi'
-                                onChange={(e) => onDescriptionChange(e.target.value, poi)} // Funzione per gestire il cambiamento
-                            />
-                            {/* Pulsante per salvare la descrizione */}
-                            <button onClick={() => handleSaveDesc(poi)}>
-                                Salva descrizione
-                            </button>
-                            {isLoggedIn && ( // Mostra l'input solo se isLoggedIn è true
+                            <h6>Posizione {poi.key}</h6>
+
+                            {editingKey === poi.key ? (
+                                <>
+                                    {/* Campo di input per modificare la descrizione */}
+                                    <input
+                                        type="text"
+                                        placeholder="Modifica descrizione"
+                                        value={editingDesc[poi.key] ?? poi.desc ?? ''}
+                                        onChange={e => handleDescriptionChange(e.target.value, poi)}
+                                    />
+                                    <button onClick={() => handleSaveDesc(poi)}>
+                                        Salva descrizione
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    {!isLoggedIn ? (
+                                        <p>{poi.desc}</p>
+                                    ) : (
+                                        <>
+                                            <p>{poi.desc || 'Nessuna descrizione disponibile'}</p>
+                                            <button onClick={() => setEditingKey(poi.key)}>
+                                                Modifica
+                                            </button>
+                                        </>
+                                    )}
+                                </>
+                            )}
+
+                            {isLoggedIn && (
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) => onFileChange(e, poi)}
+                                    onChange={e => onFileChange(e, poi)}
                                 />
                             )}
-                            {poi.image && <img src={poi.image} alt={`Marker ${poi.key}`} width={50} height={50} />}
+                            {poi.image && (
+                                <img src={poi.image} alt={`Marker ${poi.key}`} width={50} height={50} />
+                            )}
                         </li>
                     ))}
                 </ul>
